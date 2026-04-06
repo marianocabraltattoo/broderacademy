@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 1 | Broderacademy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { dark: '#0a0a0a', accent: '#c62828', card: '#141414' }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #0a0a0a; color: #ffffff; font-family: 'Poppins', sans-serif; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        /* Efecto de cristal para la barra fija */
+        .glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="p-4 border-b border-white/5 flex justify-between items-center bg-dark z-50">
+        <a href="index.html" class="text-[10px] font-black italic uppercase tracking-tighter hover:text-accent transition">
+            ← VOLVER AL <span class="text-accent">INICIO</span>
+        </a>
+        <h1 class="text-sm font-black tracking-tighter italic uppercase leading-none">
+            BRODER<span class="text-accent">ACADEMY</span>
+        </h1>
+        <div class="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 hidden md:block italic">Módulo de Estudio</div>
+    </nav>
+
+    <div class="sticky top-0 z-40 glass border-b border-white/10 py-4 px-6 shadow-2xl">
+        <div class="max-w-6xl mx-auto flex items-center gap-6">
+            <div class="flex flex-col">
+                <span class="text-[9px] font-black uppercase tracking-widest text-accent italic">Día 01</span>
+                <span class="text-[10px] font-bold uppercase text-white hidden md:block">Introducción y Piel</span>
+            </div>
+            <div class="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div class="w-1/3 h-full bg-accent shadow-[0_0_15px_rgba(198,40,40,0.6)] transition-all duration-500"></div>
+            </div>
+            <div class="text-right">
+                <span class="text-[10px] font-black uppercase text-white italic italic leading-none">33%</span>
+                <p class="text-[8px] text-gray-500 uppercase tracking-tighter hidden md:block font-bold">Completado</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        
+        <div class="grid lg:grid-cols-3 gap-12">
+            
+            <div class="lg:col-span-2 space-y-16">
+                
+                <div class="border-l-4 border-accent pl-6 mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">
+                        DÍA 1: <span class="text-accent">CONCEPTOS INICIALES</span>
+                    </h2>
+                    <p class="text-gray-500 text-xs uppercase mt-3 tracking-widest font-bold italic">Presentación • Ley vigente • Capas de la piel</p>
+                </div>
+
+                <section id="video1">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-accent text-[9px] font-black px-2 py-1 italic">1.1</span>
+                            <h3 class="text-sm font-bold uppercase tracking-widest italic">Bienvenida y Marco Legal</h3>
+                        </div>
+                        <span class="text-[10px] text-gray-500 font-bold italic uppercase tracking-tighter">Duración: 12:45</span>
+                    </div>
+                    <div class="video-container shadow-2xl border border-white/10 group">
+                        <iframe src="https://www.youtube.com/embed/y89JRJgvVWc" allowfullscreen></iframe>
+                    </div>
+                    <div class="mt-4 p-4 bg-white/5 border-l border-accent/30">
+                        <p class="text-[11px] text-gray-400 italic leading-relaxed">
+                            En este primer video repasamos la importancia de la ley vigente en Argentina y cómo se regula la actividad del tatuador profesional.
+                        </p>
+                    </div>
+                </section>
+
+                <section id="video2">
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="bg-accent text-[9px] font-black px-2 py-1 italic">1.2</span>
+                            <h3 class="text-sm font-bold uppercase tracking-widest italic">Anatomía: Capas de la piel</h3>
+                        </div>
+                        <span class="text-[10px] text-gray-500 font-bold italic uppercase tracking-tighter">Duración: 15:20</span>
+                    </div>
+                    <div class="video-container shadow-2xl border border-white/10 group">
+                        <iframe src="https://www.youtube.com/embed/3AkWRq1eiOI" allowfullscreen></iframe>
+                    </div>
+                    <div class="mt-4 p-4 bg-white/5 border-l border-accent/30">
+                        <p class="text-[11px] text-gray-400 italic leading-relaxed">
+                            Entender la dermis y la epidermis es clave para saber exactamente a qué profundidad debe entrar la aguja para que el pigmento no se borre ni se expanda.
+                        </p>
+                    </div>
+                </section>
+
+            </div>
+
+            <div class="space-y-6">
+                
+                <div class="bg-card border border-white/5 p-8 sticky top-32">
+                    <h4 class="text-xs font-black uppercase tracking-[0.2em] mb-6 border-b border-white/10 pb-4 italic">Recursos del Día</h4>
+                    
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="LINK_A_TU_PDF_TEORICO" target="_blank" class="flex items-center justify-between group p-4 border border-white/5 hover:border-accent hover:bg-accent/5 transition duration-300">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase text-white group-hover:text-accent">PDF Teórico - Día 1</span>
+                                    <span class="text-[8px] text-gray-500 uppercase font-bold">Conceptos y Leyes</span>
+                                </div>
+                                <svg class="w-5 h-5 text-accent opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="LINK_A_TU_PDF_EJERCICIOS" target="_blank" class="flex items-center justify-between group p-4 border border-white/5 hover:border-accent hover:bg-accent/5 transition duration-300">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase text-white group-hover:text-accent">Guía de Práctica</span>
+                                    <span class="text-[8px] text-gray-500 uppercase font-bold">Ejercicios de Piel</span>
+                                </div>
+                                <svg class="w-5 h-5 text-accent opacity-50 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="mt-12 pt-8 border-t border-white/10">
+                        <p class="text-[9px] text-gray-500 uppercase font-black mb-4 tracking-widest italic">Siguiente Paso</p>
+                        <a href="curso-dia-2.html" class="flex items-center justify-center gap-3 bg-white text-dark py-4 text-[10px] font-black uppercase tracking-widest hover:bg-accent hover:text-white transition duration-300 group">
+                            Ir al Día 2
+                            <span class="group-hover:translate-x-1 transition-transform">→</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="py-12 border-t border-white/5 text-center bg-dark">
+        <p class="text-[9px] text-gray-800 tracking-[0.4em] uppercase font-black">Panel Académico • Broderacademy • 2026</p>
+    </footer>
+
+</body>
+</html>
