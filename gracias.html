@@ -1,35 +1,52 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finalizar Compra | Broderacademy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>¡Bienvenido a la Academia! | Broderacademy</title>
     
     <link rel="icon" type="image/png" href="img/favicon.png">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¡Bienvenido a la Academia! | Broderacademy</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Poppins', 'sans-serif'], black: ['Archivo Black', 'sans-serif'] },
-                    colors: { dark: '#0a0a0a', accent: '#c62828', card: '#141414' }
+                    fontFamily: { 
+                        sans: ['Poppins', 'sans-serif'], 
+                        black: ['Archivo Black', 'sans-serif'] 
+                    },
+                    colors: { 
+                        dark: '#0a0a0a', 
+                        accent: '#c62828', 
+                        card: '#141414' 
+                    }
                 }
             }
         }
     </script>
-</head>
-<body class="bg-dark text-white antialiased font-sans flex flex-col min-h-screen">
 
-    <nav class="p-6 border-b border-white/5 flex justify-center">
-        <h1 class="text-xl font-black italic uppercase">
+    <style>
+        /* BLINDAJE MOBILE: Evita zoom y scroll horizontal */
+        html, body { 
+            max-width: 100vw; 
+            overflow-x: hidden; 
+            position: relative;
+            touch-action: pan-y;
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+        }
+        .font-black-logo { font-family: 'Archivo Black', sans-serif; }
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <nav class="p-6 border-b border-white/5 flex justify-center bg-dark/50 backdrop-blur-md sticky top-0 z-50">
+        <h1 class="text-xl font-black-logo italic uppercase tracking-tighter">
             BRODER<span class="text-accent">ACADEMY</span>
         </h1>
     </nav>
@@ -41,24 +58,24 @@
                 <span class="text-4xl">🔥</span>
             </div>
 
-            <div class="space-y-2">
-                <h2 class="text-4xl md:text-6xl font-black uppercase italic tracking-tighter">
-                    ¡YA SOS PARTE, <span class="text-accent">BRODER</span>!
+            <div class="space-y-4">
+                <h2 class="text-5xl md:text-7xl font-black-logo uppercase italic tracking-tighter leading-none">
+                    ¡YA SOS PARTE, <br><span class="text-accent text-shadow">BRODER</span>!
                 </h2>
-                <p class="text-gray-400 uppercase tracking-[0.3em] font-bold text-xs italic">
-                    El acceso a tu nueva vida como tatuador empieza acá.
+                <p class="text-gray-400 uppercase tracking-[0.3em] font-bold text-[10px] md:text-xs italic">
+                    El acceso a tu nueva vida empieza acá.
                 </p>
             </div>
 
-            <div class="grid md:grid-cols-2 gap-4 pt-8">
+            <div class="grid md:grid-cols-2 gap-6 pt-8">
                 
                 <a href="https://drive.google.com/drive/folders/1EWzyKbzx8g-MQ0YHYJR9FJrwVcsPfoEd?usp=sharing" target="_blank" class="bg-white text-dark py-6 px-4 font-black uppercase italic text-sm tracking-widest hover:bg-gray-200 transition-all transform hover:scale-[1.03] flex flex-col items-center gap-2 shadow-2xl">
-                    <span>📚 DESCARGAR EBOOK</span>
+                    <span class="font-black">📚 DESCARGAR EBOOK</span>
                     <span class="text-[10px] font-bold opacity-60">PDF MAESTRO</span>
                 </a>
 
                 <a href="https://broderacademy.vercel.app/dia1.html" class="bg-accent text-white py-6 px-4 font-black uppercase italic text-sm tracking-widest hover:bg-red-800 transition-all transform hover:scale-[1.03] flex flex-col items-center gap-2 shadow-2xl shadow-accent/20">
-                    <span>🎥 VER VIDEOS</span>
+                    <span class="font-black">🎥 VER VIDEOS</span>
                     <span class="text-[10px] font-bold opacity-80">ACCESO ACADEMIA</span>
                 </a>
 
@@ -71,7 +88,7 @@
     </main>
 
     <footer class="text-center py-8 opacity-20 text-[8px] uppercase tracking-[0.5em] font-bold italic">
-        Broderacademy &copy; 2026 • Disciplina y Tinta
+        Broderacademy &copy; 2026 • Disciplina y Tinta • Moreno, Bs.As.
     </footer>
 
 </body>
