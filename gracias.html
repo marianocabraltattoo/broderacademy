@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1197236062271546'); 
+    fbq('track', 'PageView');
+    
+    // ESTE ES EL EVENTO CLAVE: Compra exitosa
+    fbq('track', 'Purchase', {
+        value: 30000.00,
+        currency: 'ARS',
+        content_name: 'Curso Aprende a Tatuar en 10 Días',
+        content_type: 'product'
+    });
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1197236062271546&ev=PageView&noscript=1"
+    /></noscript>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>¡Bienvenido a la Academia! | Broderacademy</title>
@@ -30,7 +53,6 @@
     </script>
 
     <style>
-        /* BLINDAJE MOBILE: Evita zoom y scroll horizontal */
         html, body { 
             max-width: 100vw; 
             overflow-x: hidden; 
@@ -41,6 +63,7 @@
             font-family: 'Poppins', sans-serif;
         }
         .font-black-logo { font-family: 'Archivo Black', sans-serif; }
+        .text-shadow { text-shadow: 0 0 20px rgba(198, 40, 40, 0.5); }
     </style>
 </head>
 <body class="antialiased flex flex-col min-h-screen">
