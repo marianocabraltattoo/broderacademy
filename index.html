@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <meta name="facebook-domain-verification" content="hifgodxrw90upgxfrx1pq0lkew0w9c" />
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Broderacademy | Aprende a Tatuar en 10 Días</title>
     
     <link rel="icon" type="image/png" href="img/favicon.png">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     
     <meta name="description" content="Aprende a tatuar en 10 Días y Sin máquina. De la calle al estudio con Mariano Cabral.">
     <meta property="og:title" content="Broderacademy | Aprende a Tatuar en 10 Días">
@@ -29,6 +29,8 @@
                         dark: '#0a0a0a',
                         accent: '#c62828',
                         card: '#141414',
+                        // Agregamos el verde personalizado por si quieres usarlo como clase fija
+                        success: '#059669', 
                     }
                 }
             }
@@ -55,10 +57,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .animate-float { animation: fadeInUp 0.8s ease-out forwards; }
-        /* Animación de parpadeo sutil para la urgencia */
         @keyframes pulse-red {
-            0%, 100% { background-color: #c62828; } /* Rojo original */
-            50% { background-color: #ff3d00; } /* Rojo más brillante/naranja */
+            0%, 100% { background-color: #c62828; }
+            50% { background-color: #ff3d00; }
         }
         .animate-urgency {
             animation: pulse-red 1.5s infinite ease-in-out;
@@ -81,7 +82,7 @@
         <h1 class="text-2xl font-black-logo tracking-tighter italic uppercase leading-none">
             BRODER<span class="text-accent">ACADEMY</span>
         </h1>
-        <a href="checkout.html" class="bg-white text-dark px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-accent hover:text-white transition shadow-lg">
+        <a href="checkout.html" class="bg-emerald-600 text-white px-6 py-3 text-xs font-black uppercase tracking-widest hover:bg-emerald-700 transition shadow-lg">
             SÍ, QUIERO MI LUGAR
         </a>
     </nav>
@@ -93,7 +94,7 @@
                 APRENDÉ A <br>TATUAR EN <span class="text-accent text-shadow">10 DÍAS</span>
             </h2>
             <p class="mt-8 text-xl md:text-3xl font-light max-w-3xl mx-auto leading-tight italic text-gray-200">
-                Sin máquinas. Solo técnica, bioseguridad y control de trazo.
+                Sin máquinas: Domina el pulso, el diseño y como trabajar de forma 100% segura con tus clientes
             </p>
 
             <div class="mt-12 grid md:grid-cols-2 gap-6 text-left">
@@ -103,44 +104,71 @@
                         <li class="flex items-start gap-3"><span>❌</span> Te apasiona dibujar pero no sabés cobrar</li>
                         <li class="flex items-start gap-3"><span>❌</span> Pensás que necesitás invertir una fortuna</li>
                         <li class="flex items-start gap-3"><span>❌</span> Tenés miedo de lastimar por falta de técnica</li>
-                        <li class="flex items-start gap-3"><span>❌</span> No sabes dibujar, sin embargo el tatuaje es técnica y oficio que se entrena, no un don de nacimiento.</li>
-                        <li class="flex items-start gap-3"><span>❌</span> Mirás mil videos en YouTube, pero te sentís perdido entre tanta información mezclada y sin una guía real que te diga por dónde arrancar.
-                    </ul></li>
-
-                       
+                        <li class="flex items-start gap-3"><span>❌</span> No sabés dibujar: el tatuaje es técnica y oficio que se entrena.</li>
+                        <li class="flex items-start gap-3"><span>❌</span> Estás perdido entre mil videos de YouTube sin una guía real.</li>
+                    </ul>
                 </div>
                 <div class="bg-card/50 p-8 border-l-4 border-green-700">
                     <h3 class="font-black-logo uppercase text-xs mb-5 tracking-widest text-green-500 italic">Esto es lo que vas a lograr</h3>
                     <ul class="space-y-4 text-sm md:text-base text-gray-100 font-black uppercase italic tracking-tight">
                         <li class="flex items-start gap-3"><span>✅</span> Aprendé en 10 días desde tu casa</li>
                         <li class="flex items-start gap-3"><span>✅</span> Dominá el pulso para que la máquina sea solo tu extensión.</li>
-                        <li class="flex items-start gap-3"><span>✅</span> Empezá con $0 de inversión. Desarrollá tu memoria muscular usando solo lo que tenés en tu escritorio.</li>
-                        <li class="flex items-start gap-3"><span>✅</span> Llevate una base técnica profesional que no vas a encontrar en ningún video suelto.</li>
+                        <li class="flex items-start gap-3"><span>✅</span> Empezá con $0 de inversión inicial.</li>
+                        <li class="flex items-start gap-3"><span>✅</span> Base técnica profesional que no está en videos sueltos.</li>
                         <li class="flex items-start gap-3"><span>✅</span> Vivir del arte es posible y rentable</li>
                         <li class="flex items-start gap-3"><span>✅</span> Hoja de ruta estructurada de 0 a 100</li>
                     </ul>
                 </div>
             </div>
-            
-            <div class="mt-14">
-                <a href="checkout.html" class="w-full md:w-auto bg-accent text-white px-12 py-6 text-base font-black uppercase tracking-widest hover:bg-red-800 transition-all inline-block italic shadow-2xl shadow-accent/40">
-                    ¡COMENZAR AHORA MISMO!
-                </a>
-                <p class="mt-8 text-gray-400 text-xs md:text-sm uppercase tracking-widest font-bold italic animate-pulse">
-                    ⚡ Aprendé rápido sin necesidad de una máquina
-                </p>
-            </div>
         </div>
     </header>
+
+    <section id="checkout" class="py-24 bg-accent text-white">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-7xl font-black-logo uppercase italic mb-4 leading-none text-shadow">
+                    PRECIO LANZAMIENTO <br>APRENDE A TATUAR EN <span class="text-white">10 DÍAS SIN MÁQUINA</span>
+                </h2>
+                <p class="uppercase tracking-[0.3em] font-black text-xs md:text-sm opacity-90 italic">Oferta de lanzamiento limitada</p>
+            </div>
+
+            <div class="bg-dark p-8 md:p-16 shadow-2xl relative overflow-hidden border border-white/5">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <div class="w-full lg:w-1/2 flex justify-center relative">
+                        <div class="absolute inset-0 bg-accent/10 rounded-full blur-3xl"></div>
+                        <img src="img/libro-maestro.png" alt="Libro" class="relative z-10 max-h-[400px] lg:max-h-[550px] w-auto object-contain shadow-2xl transition duration-500 hover:scale-105">
+                    </div>
+
+                    <div class="w-full lg:w-1/2 text-center lg:text-left space-y-8">
+                        <h3 class="text-4xl md:text-6xl font-black-logo uppercase italic text-accent leading-none">PRECIO LANZAMIENTO</h3>
+                        
+                        <div class="space-y-2">
+                            <p class="text-sm md:text-base uppercase tracking-widest text-gray-500 line-through font-bold">ANTES $90.000</p>
+                            <p class="text-7xl md:text-9xl font-black-logo italic tracking-tighter text-white leading-none">AHORA $30.000</p>
+                        </div>
+
+                        <a href="checkout.html" class="block w-full bg-emerald-600 text-white py-8 px-4 font-black-logo text-xl md:text-2xl uppercase tracking-widest hover:bg-emerald-700 transition text-center shadow-2xl transform hover:scale-[1.02]">
+                            ¡QUIERO ACCEDER AHORA! 🚀
+                        </a>
+                        
+                        <p class="text-xs md:text-sm text-gray-400 uppercase font-black tracking-widest italic text-center lg:text-left">
+                            🔒 Pago seguro y acceso inmediato vía e-mail
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="py-24 bg-white text-dark"> 
         <div class="max-w-7xl mx-auto px-6">
             <div class="text-center mb-20">
                 <h2 class="text-4xl md:text-7xl font-black-logo uppercase italic leading-none">
-                    BONOS DE REGALO <br><span class="text-accent text-shadow">SI COMPRÁS HOY</span>
+                    LLEVATE ESTAS GUIAS GRATIS Y POTENCIA TU APRENDIZAJE
+ <br><span class="text-accent text-shadow">SI COMPRÁS HOY</span>
                 </h2>
                 <p class="text-gray-500 uppercase text-sm font-black tracking-[0.3em] mt-6 italic">
-                    Solo por tiempo limitado • Valor Total: $45.000
+                    Solo por tiempo limitado • Valor Regular: $45.000
                 </p>
             </div>
             
@@ -183,46 +211,17 @@
                     <h4 class="text-4xl font-black-logo uppercase italic leading-none">Mariano Cabral</h4>
                     <p class="text-accent font-black uppercase tracking-widest text-xs mt-3 mb-8 italic">Designer & Tattoo Artist</p>
                     <p class="text-gray-700 leading-relaxed font-light italic text-xl md:text-2xl">
-                        "Mi objetivo es ayudar a quienes se inician en este maravilloso mundo, brindar bases sólidas y acompañar durante el proceso de aprendizaje. Con más de 5 años tatuando e impartiendo conocimiento, te enseño el oficio con respeto y técnica."
+                        "Mi objetivo es ayudar a quienes se inician en este maravilloso mundo, brindar bases sólidas y acompañar durante el proceso de aprendizaje."
                     </p>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <section id="checkout" class="py-24 bg-accent text-white">
-        <div class="max-w-6xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-5xl md:text-8xl font-black-logo uppercase italic mb-4 leading-none text-shadow">ESTA ES TU OPORTUNIDAD</h2>
-                <p class="uppercase tracking-[0.3em] font-black text-xs md:text-sm opacity-90 italic">Oferta de lanzamiento limitada</p>
-            </div>
-
-            <div class="bg-dark p-8 md:p-16 shadow-2xl relative overflow-hidden border border-white/5">
-                <div class="absolute top-0 right-0 bg-white text-dark font-black px-6 py-3 uppercase text-xs tracking-widest italic z-10 shadow-xl">70% OFF HOY</div>
-                
-                <div class="flex flex-col lg:flex-row items-center gap-12">
-                    <div class="w-full lg:w-1/2 flex justify-center relative">
-                        <div class="absolute inset-0 bg-accent/10 rounded-full blur-3xl"></div>
-                        <img src="img/libro-maestro.png" alt="Libro" class="relative z-10 max-h-[400px] lg:max-h-[550px] w-auto object-contain shadow-2xl transition duration-500 hover:scale-105">
-                    </div>
-
-                    <div class="w-full lg:w-1/2 text-center lg:text-left space-y-8">
-                        <h3 class="text-4xl md:text-6xl font-black-logo uppercase italic text-accent leading-none">PRECIO DE LANZAMIENTO</h3>
-                        
-                        <div class="space-y-2">
-                            <p class="text-sm md:text-base uppercase tracking-widest text-gray-500 line-through font-bold">$90.000 ARS</p>
-                            <p class="text-7xl md:text-9xl font-black-logo italic tracking-tighter text-white leading-none">$30.000</p>
-                        </div>
-
-                        <a href="checkout.html" class="block w-full bg-white text-dark py-8 px-4 font-black-logo text-xl md:text-2xl uppercase tracking-widest hover:bg-accent hover:text-white transition text-center shadow-2xl transform hover:scale-[1.02]">
-                            ¡QUIERO ACCEDER AHORA! 🚀
-                        </a>
-                        
-                        <p class="text-xs md:text-sm text-gray-400 uppercase font-black tracking-widest italic text-center lg:text-left">
-                            🔒 Pago seguro y acceso inmediato vía e-mail
-                        </p>
-                    </div>
-                </div>
+            <div class="mt-14">
+                <a href="#checkout" class="w-full md:w-auto bg-emerald-600 text-white px-12 py-6 text-base font-black uppercase tracking-widest hover:bg-emerald-700 transition-all inline-block italic shadow-2xl shadow-emerald-900/20">
+                    ¡COMENZAR AHORA MISMO!
+                </a>
+                <p class="mt-8 text-gray-400 text-xs md:text-sm uppercase tracking-widest font-bold italic animate-pulse">
+                    ⚡ Aprendé rápido sin necesidad de una máquina
+                </p>
             </div>
         </div>
     </section>
