@@ -212,6 +212,24 @@
                 window.location.href = linkPagoMP;
             }, 500);
         });
+
+            btnVerde.addEventListener('click', () => {
+    // ... acá van tus validaciones de nombre y mail que ya pusimos ...
+
+    // ESTO ES LO QUE REEMPLAZA A LA HERRAMIENTA DE META
+    fbq('track', 'InitiateCheckout', {
+        content_name: 'Curso Aprende a Tatuar en 10 Días',
+        value: 30000.00,
+        currency: 'ARS',
+        external_id: inputEmail.value.trim().toLowerCase() // Mejora el match
+    });
+
+    // Luego sigue la redirección a Mercado Pago
+    setTimeout(() => {
+        window.location.href = linkPagoMP;
+    }, 500);
+});
+
     </script>
 </body>
 </html>
