@@ -10,13 +10,8 @@
     t.src=v;s=b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t,s)}(window, document,'script',
     'https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1197236062271546'); // ESTE ES TU ID CORRECTO
+    fbq('init', '1197236062271546'); 
     fbq('track', 'PageView');
-    fbq('track', 'InitiateCheckout', {
-        content_name: 'Curso Aprende a Tatuar en 10 Días',
-        value: 30000.00,
-        currency: 'ARS'
-    });
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1197236062271546&ev=PageView&noscript=1"
@@ -53,8 +48,6 @@
         html, body { 
             max-width: 100vw; 
             overflow-x: hidden; 
-            position: relative;
-            touch-action: pan-y;
             background-color: #0a0a0a;
             color: #ffffff;
         }
@@ -70,15 +63,15 @@
         </h1>
     </nav>
 
-    <main class="max-w-5xl mx-auto py-6 px-6 grid md:grid-cols-12 gap-6 items-stretch">
+    <main class="max-w-5xl mx-auto py-4 md:py-8 px-4 md:px-6 grid md:grid-cols-12 gap-6 items-stretch">
         
-        <div class="md:col-span-7 flex flex-col gap-6">
-            <section class="bg-card p-6 border border-white/5 shadow-2xl flex-1 flex flex-col justify-center">
+        <div class="md:col-span-7 flex flex-col gap-6 order-1 md:order-1">
+            <section class="bg-card p-5 md:p-8 border border-white/5 shadow-2xl flex-1">
                 <h2 class="font-black uppercase italic text-xs tracking-widest mb-6 text-accent">1. Tus Datos de Acceso</h2>
                 <div class="grid gap-5">
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-widest italic">Nombre Completo</label>
-                        <input id="nombre" type="text" placeholder="EJ: MARIANO CABRAL" class="w-full bg-dark border border-white/10 p-4 text-sm focus:border-accent outline-none transition uppercase italic font-bold tracking-tight text-white">
+                        <input id="nombre" type="text" placeholder="EJ: MARIANO CABRAL" class="w-full bg-dark border border-white/10 p-4 text-sm focus:border-accent outline-none transition uppercase italic font-bold text-white">
                     </div>
                     <div>
                         <label class="block text-[10px] uppercase font-bold text-gray-400 mb-2 tracking-widest italic">Email de entrega</label>
@@ -87,28 +80,28 @@
                 </div>
             </section>
 
-            <section class="bg-card p-6 border border-white/5">
+            <section class="bg-card p-5 md:p-8 border border-white/5">
                 <h2 class="font-black uppercase italic text-xs tracking-widest mb-6 text-accent">2. Método de Pago</h2>
-                <label class="flex items-center justify-between p-5 border-2 border-accent bg-accent/5 cursor-pointer hover:bg-accent/10 transition-all">
+                <label class="flex items-center justify-between p-4 md:p-5 border-2 border-accent bg-accent/5 cursor-pointer">
                     <div class="flex items-center gap-4">
                         <input type="radio" name="pago" checked class="w-5 h-5 accent-accent">
-                        <span class="font-black uppercase italic text-xs tracking-widest">Mercado Pago / Tarjetas</span>
+                        <span class="font-black uppercase italic text-[10px] md:text-xs tracking-widest">Mercado Pago / Tarjetas</span>
                     </div>
-                    <img src="img/logo-mp.png" class="h-10 object-contain" alt="Mercado Pago">
+                    <img src="img/logo-mp.png" class="h-8 md:h-10 object-contain" alt="Mercado Pago">
                 </label>
             </section>
         </div>
 
-        <div class="md:col-span-5">
-            <div class="bg-card border border-white/5 p-6 h-full flex flex-col justify-between shadow-2xl">
+        <div class="md:col-span-5 order-2 md:order-2">
+            <div class="bg-card border border-white/5 p-5 md:p-8 h-full flex flex-col justify-between shadow-2xl">
                 <div>
                     <h2 class="font-black uppercase italic text-xs tracking-widest mb-6">Tu Pedido</h2>
                     
                     <div class="flex items-center gap-5 pb-6 border-b border-white/5">
-                        <img src="img/libro-maestro.png" class="w-24 h-28 object-contain drop-shadow-[0_0_20px_rgba(198,40,40,0.4)]" alt="Libro">
+                        <img src="img/libro-maestro.png" class="w-20 h-24 md:w-24 md:h-28 object-contain drop-shadow-[0_0_20px_rgba(198,40,40,0.4)]" alt="Libro">
                         <div>
-                            <h3 class="font-black uppercase italic text-[14px] leading-tight text-white mb-1">Aprende a tatuar en 10 días</h3>
-                            <p class="text-[11px] text-accent font-black tracking-widest uppercase italic leading-none">Pack Master + 3 Bonos</p>
+                            <h3 class="font-black uppercase italic text-[13px] md:text-[14px] leading-tight text-white mb-1">Aprende a tatuar en 10 días</h3>
+                            <p class="text-[10px] text-accent font-black tracking-widest uppercase italic leading-none">Pack Master + 3 Bonos</p>
                         </div>
                     </div>
 
@@ -129,18 +122,13 @@
                 </div>
 
                 <div class="mt-4">
-                    <p class="text-[9px] text-center text-gray-600 uppercase font-bold tracking-[0.2em] italic mt-[-15px] mb-2">
+                    <p class="text-[9px] text-center text-gray-600 uppercase font-bold tracking-[0.2em] italic mb-3">
                         🔒 Transacción Segura
                     </p>
-
-                    <div class="flex justify-center w-full px-4 mb-6">
-                        
-
-                    <script src="https://www.mercadopago.com.ar/integrations/v1/web-payment-checkout.js"
-                    data-preference-id="86474566-6af05e65-b278-4f35-ad09-08a6e1180200" data-source="button">
-                    </script>
-
-                    </div>
+                    <button id="btn-finalizar-compra" 
+                        class="w-full bg-emerald-600 text-white py-5 px-4 font-black-logo uppercase italic text-center hover:bg-emerald-700 transition-all shadow-xl shadow-emerald-900/40 transform hover:scale-[1.02] text-sm tracking-widest">
+                        FINALIZAR COMPRA 🚀
+                    </button>
                 </div>
             </div>
         </div>
@@ -156,80 +144,48 @@
         const inputEmail = document.getElementById('email');
         const linkPagoMP = "https://www.mercadopago.com.ar/checkout/v1/redirect?pref_id=86474566-6af05e65-b278-4f35-ad09-08a6e1180200";
 
-        // --- TRUCO LOCALSTORAGE Y RECUPERACIÓN ---
+        // Recuperación de datos
         window.onload = function() {
-            const nombreGuardado = localStorage.getItem('ba_nombre');
-            const emailGuardado = localStorage.getItem('ba_email');
-            
-            if (nombreGuardado) inputNombre.value = nombreGuardado;
-            if (emailGuardado) inputEmail.value = emailGuardado;
+            inputNombre.value = localStorage.getItem('ba_nombre') || '';
+            inputEmail.value = localStorage.getItem('ba_email') || '';
         };
 
-        // Guardamos cada vez que escriben una letra (para capturar el abandono)
-        inputNombre.addEventListener('input', () => {
-            localStorage.setItem('ba_nombre', inputNombre.value);
-        });
+        inputNombre.addEventListener('input', () => localStorage.setItem('ba_nombre', inputNombre.value));
+        inputEmail.addEventListener('input', () => localStorage.setItem('ba_email', inputEmail.value));
 
-        inputEmail.addEventListener('input', () => {
-            localStorage.setItem('ba_email', inputEmail.value);
-        });
-
-        // --- LÓGICA DE VALIDACIÓN Y PAGO ---
-        btnVerde.addEventListener('click', () => {
-            // Reset de bordes de error
+        // Lógica única de validación y pago
+        btnVerde.addEventListener('click', (e) => {
+            e.preventDefault();
+            
             inputNombre.classList.remove('border-accent');
             inputEmail.classList.remove('border-accent');
 
             const nombreValido = inputNombre.value.trim() !== "";
-            const emailValido = inputEmail.value.includes('@') && inputEmail.value.includes('.') && inputEmail.value.trim() !== "";
+            const emailValido = inputEmail.value.includes('@') && inputEmail.value.trim() !== "";
 
             if (!nombreValido || !emailValido) {
-                alert("⚠️ Broder, completá tu nombre y un email válido para recibir el curso.");
-                if (!nombreValido) {
-                    inputNombre.classList.add('border-accent');
-                    inputNombre.focus();
-                } else if (!emailValido) {
-                    inputEmail.classList.add('border-accent');
-                    inputEmail.focus();
-                }
+                alert("⚠️ Broder, completá tu nombre y un mail válido.");
+                if (!nombreValido) inputNombre.classList.add('border-accent');
+                if (!emailValido) inputEmail.classList.add('border-accent');
                 return;
             }
 
-            // --- EVENTO DE META (AddPaymentInfo) ---
-            fbq('track', 'AddPaymentInfo', {
+            // Disparo de Píxel manual
+            fbq('track', 'InitiateCheckout', {
                 content_name: 'Curso Aprende a Tatuar en 10 Días',
                 value: 30000.00,
                 currency: 'ARS',
                 external_id: inputEmail.value.trim().toLowerCase()
             });
 
-            // Limpiamos storage al finalizar con éxito
+            // Limpieza y Redirección
             localStorage.removeItem('ba_nombre');
             localStorage.removeItem('ba_email');
 
-            // Redirigimos después de un mini delay para que el Píxel procese
             setTimeout(() => {
-                window.location.href = linkPagoMP;
+                window.location.assign(linkPagoMP);
             }, 500);
         });
-
-            btnVerde.addEventListener('click', () => {
-    // ... acá van tus validaciones de nombre y mail que ya pusimos ...
-
-    // ESTO ES LO QUE REEMPLAZA A LA HERRAMIENTA DE META
-    fbq('track', 'InitiateCheckout', {
-        content_name: 'Curso Aprende a Tatuar en 10 Días',
-        value: 30000.00,
-        currency: 'ARS',
-        external_id: inputEmail.value.trim().toLowerCase() // Mejora el match
-    });
-
-    // Luego sigue la redirección a Mercado Pago
-    setTimeout(() => {
-        window.location.href = linkPagoMP;
-    }, 500);
-});
-
     </script>
 </body>
 </html>
