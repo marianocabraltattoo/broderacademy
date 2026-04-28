@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Día 10 | Broderacademy</title>
+    
+    <link rel="icon" type="image/png" href="img/favicon.png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { dark: '#0a0a0a', accent: '#c62828', card: '#141414' }
+                }
+            }
+        }
+    </script>
+    <style>
+        html { scroll-behavior: smooth; }
+        body { background-color: #0a0a0a; color: #ffffff; font-family: 'Poppins', sans-serif; }
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        .glass { background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="p-4 border-b border-white/5 flex justify-between items-center bg-dark z-50">
+        <a href="dia9.html" class="text-[10px] font-black italic uppercase tracking-tighter hover:text-accent transition">
+            ← VOLVER AL <span class="text-accent">DÍA 9</span>
+        </a>
+        <h1 class="text-sm font-black tracking-tighter italic uppercase leading-none text-white">
+            BRODER<span class="text-accent">ACADEMY</span>
+        </h1>
+        <div class="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-500 hidden md:block italic">Módulo de Estudio</div>
+    </nav>
+
+    <div class="sticky top-0 z-40 glass border-b border-white/10 py-4 px-6 shadow-2xl">
+        <div class="max-w-6xl mx-auto flex items-center gap-6">
+            <div class="flex flex-col">
+                <span class="text-[9px] font-black uppercase tracking-widest text-accent italic">Día 10</span>
+                <span class="text-[10px] font-bold uppercase text-white hidden md:block">Tatuaje real con cliente</span>
+            </div>
+            <div class="flex-1 h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                <div class="w-[100%] h-full bg-accent shadow-[0_0_15px_rgba(198,40,40,0.6)] transition-all duration-500"></div>
+            </div>
+            <div class="text-right">
+                <span class="text-[10px] font-black uppercase text-white italic leading-none">100%</span>
+                <p class="text-[8px] text-gray-500 uppercase tracking-tighter hidden md:block font-bold">Total Curso</p>
+            </div>
+        </div>
+    </div>
+
+    <main class="max-w-6xl mx-auto px-6 py-12">
+        <div class="grid lg:grid-cols-3 gap-12">
+            
+            <div class="lg:col-span-2 space-y-20">
+                
+                <div class="border-l-4 border-accent pl-6 mb-12">
+                    <h2 class="text-4xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">
+                        DÍA 10: <span class="text-accent">Tatuaje real</span>
+                    </h2>
+                    <p class="text-gray-500 text-xs uppercase mt-3 tracking-widest font-bold italic">Bioseguridad • Protocolo • Experiencia del cliente</p>
+                </div>
+
+                <section id="tecnicas" class="space-y-6">
+                    <div class="flex items-center gap-3">
+                        <span class="bg-accent text-[9px] font-black px-2 py-1 italic uppercase text-white">Video Clase</span>
+                        <h3 class="text-sm font-bold uppercase tracking-widest italic">La prueba de fuego</h3>
+                    </div>
+                    <div class="video-container shadow-2xl border border-white/10">
+                        <iframe src="https://www.youtube.com/embed/TU_ID_VIDEO_10" allowfullscreen></iframe>
+                    </div>
+                    <p class="text-[12px] text-gray-400 italic">Clase final: protocolo de bioseguridad en entorno real, preparación de la estación de trabajo, consentimiento del cliente y gestión de la sesión.</p>
+                </section>
+
+                <div class="mt-8 p-6 bg-white/5 border-l border-accent/40">
+                    <h4 class="text-white font-black uppercase italic mb-2">Objetivos de hoy</h4>
+                    <p class="text-[12px] md:text-[13px] text-gray-300 italic leading-relaxed">
+                        Llegamos al final del camino. Hoy no solo aplicamos técnica, sino profesionalismo. Aprenderás a gestionar una sesión completa: desde la preparación esterilizada de la mesa hasta el trato humano con el cliente, asegurando un entorno seguro y profesional. La clave está en la calma, el respeto a los protocolos de higiene y la confianza ganada a través de la preparación técnica.
+                    </p>
+                </div>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-card border border-white/5 p-8 sticky top-32">
+                    <h4 class="text-xs font-black uppercase tracking-[0.2em] mb-6 border-b border-white/10 pb-4 italic">Material de Apoyo</h4>
+                    
+                    <ul class="space-y-4">
+                        <li>
+                            <a href="#" class="flex items-center justify-between group p-4 border border-white/5 hover:border-accent hover:bg-accent/5 transition duration-300">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase text-white">Consentimiento Informado</span>
+                                    <span class="text-[8px] text-gray-500 uppercase font-bold">PDF • Protocolo</span>
+                                </div>
+                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="flex items-center justify-between group p-4 border border-white/5 hover:border-accent hover:bg-accent/5 transition duration-300">
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] font-black uppercase text-white">Guía de Cuidados</span>
+                                    <span class="text-[8px] text-gray-500 uppercase font-bold">PDF • Legal</span>
+                                </div>
+                                <svg class="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="mt-12 pt-8 border-t border-white/10">
+                        <p class="text-[9px] text-gray-500 uppercase font-black mb-4 tracking-widest italic">Curso Finalizado</p>
+                        <a href="certificacion.html" class="flex items-center justify-center gap-3 bg-accent text-white py-4 text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-dark transition duration-300 group">
+                            FINALIZAR CURSO
+                            <span class="group-hover:translate-x-1 transition-transform">✓</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="py-12 border-t border-white/5 text-center bg-dark">
+        <p class="text-[9px] text-gray-800 tracking-[0.4em] uppercase font-black">Panel Académico • Broderacademy • 2026</p>
+    </footer>
+
+</body>
+</html>
