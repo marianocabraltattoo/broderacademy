@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mariano Cabral | Tatuador & Diseñador Gráfico</title>
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        /* --- Reset & Variables --- */
+        /* --- Reset & Variables Base --- */
         * {
             margin: 0;
             padding: 0;
@@ -24,8 +23,7 @@
             --text-primary: #f5f5f5;
             --text-secondary: #a3a3a3;
             --text-muted: #737373;
-            --accent-color: #ffffff;
-            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            --font-main: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, Arial, sans-serif;
         }
 
         body {
@@ -34,23 +32,56 @@
             font-family: var(--font-main);
             display: flex;
             justify-content: center;
-            padding: 40px 20px;
+            align-items: center;
             min-height: 100vh;
+            padding: 40px 20px;
             -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            width: 100%;
-            max-width: 580px;
+        /* Wrapper principal */
+        .page-wrapper {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            align-items: stretch;
+            max-width: 760px;
+            width: 100%;
+            gap: 32px;
         }
 
-        /* --- Perfil --- */
+        /* Sidebar del Texto Vertical */
+        .vertical-sidebar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            padding-right: 16px;
+            border-right: 1px solid var(--card-border);
+        }
+
+        .vertical-text {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 5.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -0.04em;
+            line-height: 0.85;
+            color: var(--text-primary);
+            white-space: nowrap;
+        }
+
+        /* Contenido Principal */
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        /* Perfil */
         .profile {
-            text-align: center;
+            text-align: left;
             margin-bottom: 32px;
+            width: 100%;
         }
 
         .avatar-wrapper {
@@ -58,8 +89,8 @@
         }
 
         .avatar {
-            width: 110px;
-            height: 110px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
             border: 2px solid var(--card-border);
@@ -71,12 +102,12 @@
             font-weight: 700;
             letter-spacing: -0.02em;
             color: var(--text-primary);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .subtitle {
-            font-size: 0.95rem;
-            font-weight: 400;
+            font-size: 0.88rem;
+            font-weight: 600;
             color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.08em;
@@ -88,7 +119,6 @@
             line-height: 1.6;
             color: var(--text-secondary);
             margin-bottom: 12px;
-            text-align: center;
         }
 
         .bio strong {
@@ -100,7 +130,7 @@
             color: var(--text-muted);
         }
 
-        /* --- Enlaces --- */
+        /* Enlaces */
         .links {
             width: 100%;
             display: flex;
@@ -138,7 +168,6 @@
             margin-top: 4px;
         }
 
-        /* Enlace destacado (WhatsApp) */
         .link-card.highlight {
             border-color: #ffffff;
             background-color: #1a1a1a;
@@ -148,71 +177,192 @@
             color: #ffffff;
         }
 
-        /* --- Footer --- */
         .footer {
             font-size: 0.78rem;
             color: var(--text-muted);
-            text-align: center;
+            width: 100%;
+            text-align: left;
+        }
+
+        /* =========================================================
+           VERSION MOBILE RESPONSIVE (Hasta 640px)
+           ========================================================= */
+        @media (max-width: 640px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+            }
+
+            .page-wrapper {
+                gap: 0;
+                max-width: 100%;
+                padding: 10px 15px 30px 0;
+            }
+
+            /* Texto Vertical ocupa todo el alto del cel y queda fijo al hacer scroll */
+            .vertical-sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                width: 30%;
+                padding-right: 0;
+                border-right: none;
+                overflow: hidden;
+            }
+
+            .vertical-text {
+                transform: none;
+                font-size: min(13vh, 20vw);
+                line-height: 0.8;
+                letter-spacing: -0.06em;
+            }
+
+            .container {
+                width: 70%;
+                padding-top: 20px;
+            }
+
+            .profile {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .avatar-wrapper {
+                display: flex;
+                justify-content: center;
+                margin-bottom: 12px;
+            }
+
+            .avatar {
+                width: 85px;
+                height: 85px;
+            }
+
+            .title {
+                font-size: 1.35rem;
+            }
+
+            .subtitle {
+                font-size: 0.75rem;
+                margin-bottom: 10px;
+            }
+
+            .bio {
+                font-size: 0.8rem;
+                line-height: 1.45;
+                text-align: center;
+                margin-bottom: 0;
+            }
+
+            .secondary-bio {
+                display: none; /* Oculta la bio extensa en mobile para priorizar los links */
+            }
+
+            /* Botones en Estilo Pastilla para Celular */
+            .links {
+                gap: 10px;
+                margin-bottom: 30px;
+            }
+
+            .link-card {
+                align-items: center;
+                justify-content: center;
+                padding: 13px 12px;
+                background-color: transparent;
+                border-radius: 50px;
+                text-align: center;
+            }
+
+            .link-title {
+                font-size: 0.78rem;
+                text-transform: uppercase;
+                letter-spacing: 0.03em;
+            }
+
+            .link-sub {
+                display: none; /* Oculta descripciones secundarias para una interfaz limpia */
+            }
+
+            .link-card.highlight {
+                background-color: #ffffff;
+                border-color: #ffffff;
+            }
+
+            .link-card.highlight .link-title {
+                color: #000000;
+                font-weight: 700;
+            }
+
+            .footer {
+                text-align: center;
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
 <body>
 
-    <main class="container">
-        <!-- Perfil / Cabecera -->
-        <header class="profile">
-            <div class="avatar-wrapper">
-                <img src="https://drive.google.com/thumbnail?id=1LpIdzVfuOE7y0iQZxFpW6mBmNeYUASuD&sz=w500" alt="Mariano Cabral" class="avatar">
-            </div>
-            <h1 class="title">Mariano Cabral</h1>
-            <p class="subtitle">Tatuador & Diseñador Gráfico</p>
-            
-            <p class="bio">
-                Con más de 8 años de experiencia, enfoco mi búsqueda artística en el <strong>Blackwork</strong>, la <strong>Caligrafía experimental</strong> y el <strong>Lettering</strong>, combinando el diseño con la expresión artística del tatuaje.
-            </p>
-            <p class="bio secondary-bio">
-                Entiendo la disciplina como un proceso de aprendizaje continuo; por eso no solo me dedico a capacitarme constantemente, sino que también me enfoco en compartir el conocimiento dictando cursos y talleres tanto de tatuajes como de diseño gráfico.
-            </p>
-        </header>
+    <div class="page-wrapper">
+        <!-- Lateral: Texto Vertical -->
+        <aside class="vertical-sidebar">
+            <span class="vertical-text">TATTOO</span>
+        </aside>
 
-        <!-- Botones de Enlaces -->
-        <section class="links">
-            <a href="https://wa.me/message/MA2C4XCVWNKTM1" target="_blank" rel="noopener noreferrer" class="link-card highlight">
-                <span class="link-title">WhatsApp — Turnos y Consultas</span>
-                <span class="link-sub">Agenda tu sesión o realiza tu consulta</span>
-            </a>
+        <!-- Principal: Perfil + Botones -->
+        <main class="container">
+            <header class="profile">
+                <div class="avatar-wrapper">
+                    <img src="https://drive.google.com/thumbnail?id=1LpIdzVfuOE7y0iQZxFpW6mBmNeYUASuD&sz=w500" alt="Mariano Cabral" class="avatar">
+                </div>
+                <h1 class="title">Mariano Cabral</h1>
+                <p class="subtitle">Tatuador & Diseñador Gráfico</p>
+                
+                <p class="bio">
+  Con más de <strong>8 años de experiencia</strong>, enfoco mi búsqueda artística en el <strong>Blackwork</strong>, la <strong>Caligrafía experimental</strong> y el <strong>Lettering</strong>, combinando el diseño con la expresión artística del tatuaje.
+</p>
 
-            <a href="https://www.instagram.com/mariano.tatu/" target="_blank" rel="noopener noreferrer" class="link-card">
-                <span class="link-title">Instagram</span>
-                <span class="link-sub">@mariano.tatu</span>
-            </a>
-            
-            <a href="https://www.tiktok.com/@mariano.tatu" target="_blank" rel="noopener noreferrer" class="link-card">
-                <span class="link-title">TikTok</span>
-                <span class="link-sub">@mariano.tatu</span>
-            </a>
+<p class="bio secondary-bio">
+  Entiendo la disciplina como un <strong>proceso de aprendizaje continuo</strong>; por eso no solo me dedico a capacitarme constantemente, sino que también me enfoco en <strong>compartir el conocimiento dictando cursos y talleres</strong> tanto de tatuajes como de diseño gráfico.
+</p>
+            </header>
 
-            <a href="https://www.youtube.com/@cabral.mariano/shorts" target="_blank" rel="noopener noreferrer" class="link-card">
-                <span class="link-title">YouTube Shorts</span>
-                <span class="link-sub">@cabral.mariano</span>
-            </a>
+            <section class="links">
+                <a href="https://wa.me/message/MA2C4XCVWNKTM1" target="_blank" rel="noopener noreferrer" class="link-card highlight">
+                    <span class="link-title">WhatsApp — Turnos y Consultas</span>
+                    <span class="link-sub">Agenda tu sesión o realiza tu consulta</span>
+                </a>
 
-            <a href="https://broderacademy.vercel.app/" target="_blank" rel="noopener noreferrer" class="link-card">
-                <span class="link-title">Curso: Aprende a Tatuar</span>
-                <span class="link-sub">Broder Academy</span>
-            </a>
+                <a href="https://www.instagram.com/mariano.tatu/" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <span class="link-title">Instagram</span>
+                    <span class="link-sub">@mariano.tatu</span>
+                </a>
+                
+                <a href="https://www.tiktok.com/@mariano.tatu" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <span class="link-title">TikTok</span>
+                    <span class="link-sub">@mariano.tatu</span>
+                </a>
 
-            <a href="https://broderacademy.vercel.app/curso%20caligrafia%20abstracta.html" target="_blank" rel="noopener noreferrer" class="link-card">
-                <span class="link-title">Curso: Aprende Caligrafía Abstracta</span>
-                <span class="link-sub">Broder Academy</span>
-            </a>
-        </section>
+                <a href="https://www.youtube.com/@cabral.mariano/shorts" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <span class="link-title">YouTube</span>
+                    <span class="link-sub">@cabral.mariano</span>
+                </a>
 
-        <!-- Footer -->
-        <footer class="footer">
-            <p>© Mariano Cabral — Todos los derechos reservados</p>
-        </footer>
-    </main>
+                <a href="https://broderacademy.vercel.app/" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <span class="link-title">Curso: Aprende a Tatuar</span>
+                    <span class="link-sub">Broder Academy</span>
+                </a>
+
+                <a href="https://broderacademy.vercel.app/curso%20caligrafia%20abstracta.html" target="_blank" rel="noopener noreferrer" class="link-card">
+                    <span class="link-title">Curso: Caligrafía Abstracta</span>
+                    <span class="link-sub">Broder Academy</span>
+                </a>
+            </section>
+
+            <footer class="footer">
+                <p>© Mariano Cabral — Todos los derechos reservados</p>
+            </footer>
+        </main>
+    </div>
 
 </body>
 </html>
