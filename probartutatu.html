@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Tatuaje 3D | Broder Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-color: #0d0d0d;
+            --panel-bg: #161616;
+            --border-color: #262626;
+            --text-primary: #f5f5f5;
+            --text-muted: #888888;
+            --accent: #ffffff;
+            --font-main: 'Helvetica Neue', 'Inter', -apple-system, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        header { text-align: center; margin-bottom: 24px; }
+        header h1 { font-size: 1.5rem; text-transform: uppercase; letter-spacing: -0.02em; }
+        header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+        .simulator-container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1100px; }
+        .controls {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: space-between;
+        }
+        .upload-group, .slider-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
+        label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; }
+        input[type="file"] { display: none; }
+        .btn-upload, .btn-action {
+            background-color: #222222;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 10px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+        .btn-upload:hover, .btn-action:hover:not(:disabled) { border-color: #555555; background-color: #2a2a2a; }
+        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
+        .btn-download { background-color: #ffffff; color: #000000; font-weight: 600; }
+        .btn-download:hover { background-color: #e0e0e0; }
+        .range-slider { display: flex; align-items: center; gap: 10px; }
+        input[type="range"] { width: 100%; accent-color: var(--accent); }
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 500px;
+        }
+        #webgl-container { width: 100%; height: 100%; min-height: 500px; cursor: grab; }
+        #webgl-container.dragging { cursor: move; }
+        .status-loader {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.75);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .instruction-tag {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+        @media (min-width: 768px) {
+            .simulator-container { flex-direction: row; }
+            .controls { flex-direction: column; width: 290px; flex-shrink: 0; }
+            .canvas-wrapper { flex: 1; min-height: 580px; }
+        }
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <header>
+        <h1>Simulador de Tatuajes 3D</h1>
+        <p>Proyección Anatómica en Tiempo Real</p>
+    </header>
+
+    <div class="simulator-container">
+        <aside class="controls">
+            <div class="upload-group">
+                <label>1. Diseño del Tatuaje</label>
+                <label for="tattooInput" class="btn-upload" id="tattooLabel">Subir Tatuaje (PNG / JPG)</label>
+                <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
+            </div>
+
+            <div class="upload-group">
+                <label>2. Modelo 3D Personalizado (.GLB)</label>
+                <label for="modelInput" class="btn-upload" style="background-color: #1a1a1a;">Subir Otro Modelo</label>
+                <input type="file" id="modelInput" accept=".glb, .gltf">
+            </div>
+
+            <hr style="border-color: var(--border-color); margin: 2px 0;">
+
+            <div class="slider-group">
+                <label for="scale">Tamaño / Escala</label>
+                <div class="range-slider">
+                    <input type="range" id="scale" min="0.05" max="0.8" step="0.01" value="0.25" disabled>
+                </div>
+            </div>
+
+            <div class="slider-group">
+                <label for="rotate">Rotación</label>
+                <div class="range-slider">
+                    <input type="range" id="rotate" min="0" max="360" value="0" disabled>
+                </div>
+            </div>
+
+            <div class="slider-group">
+                <label for="opacity">Opacidad (Tinta)</label>
+                <div class="range-slider">
+                    <input type="range" id="opacity" min="0.1" max="1" step="0.05" value="0.85" disabled>
+                </div>
+            </div>
+
+            <button id="btnRemove" class="btn-action" style="margin-top: 10px;" disabled>Eliminar Tatuaje</button>
+            <button id="btnDownload" class="btn-action btn-download" style="margin-top: 5px;">Descargar Captura</button>
+        </aside>
+
+        <main class="canvas-wrapper">
+            <div id="statusLoader" class="status-loader">Cargando modelo anatómico...</div>
+            <div id="webgl-container"></div>
+            <div class="instruction-tag">Arrastrá sobre la piel para ubicar el tatuaje | Rotá con el mouse</div>
+        </main>
+    </div>
+
+    <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+    const container = document.getElementById('webgl-container');
+    const statusLoader = document.getElementById('statusLoader');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x161616);
+
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(0, 0.9, 3.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.1;
+    container.appendChild(renderer.domElement);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.target.set(0, 0.9, 0);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
+    scene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0xfff8ee, 1.3);
+    dirLight1.position.set(2, 4, 3);
+    scene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0xebf2ff, 0.6);
+    dirLight2.position.set(-2, 2, -3);
+    scene.add(dirLight2);
+
+    let humanMesh = null;
+    let customModelGroup = null;
+    let tattooTexture = null;
+    let decalMesh = null;
+    let isDraggingTattoo = false;
+
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+
+    let lastHitPoint = null;
+    let lastHitNormal = null;
+
+    const decalParams = { scale: 0.25, rotation: 0, opacity: 0.85 };
+
+    const tattooInput = document.getElementById('tattooInput');
+    const modelInput = document.getElementById('modelInput');
+    const tattooLabel = document.getElementById('tattooLabel');
+    const scaleInput = document.getElementById('scale');
+    const rotateInput = document.getElementById('rotate');
+    const opacityInput = document.getElementById('opacity');
+    const btnRemove = document.getElementById('btnRemove');
+    const btnDownload = document.getElementById('btnDownload');
+
+    const skinMaterial = new THREE.MeshStandardMaterial({
+        color: 0xe0ba9e,
+        roughness: 0.55,
+        metalness: 0.0
+    });
+
+    const gltfLoader = new GLTFLoader();
+
+    // URL usando jsDelivr apuntando directamente a tu commit de GitHub
+    const DEFAULT_MODEL_URL = 'https://cdn.jsdelivr.net/gh/marianocabraltattoo/broderacademy@0b6625f3c005149981e2f7f916e48cf34b8ddb2a/sculpting_a_human_body.glb';
+
+    function setupLoadedModel(gltfGroup) {
+        if (customModelGroup) scene.remove(customModelGroup);
+        if (humanMesh) scene.remove(humanMesh);
+
+        customModelGroup = gltfGroup;
+
+        // Centrar y escalar automáticamente la escultura
+        const box = new THREE.Box3().setFromObject(customModelGroup);
+        const size = box.getSize(new THREE.Vector3());
+        const center = box.getCenter(new THREE.Vector3());
+
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 2.0 / maxDim;
+        customModelGroup.scale.setScalar(scale);
+
+        box.setFromObject(customModelGroup);
+        box.getCenter(center);
+        customModelGroup.position.sub(center);
+        customModelGroup.position.y += size.y * scale * 0.5;
+
+        humanMesh = null;
+        customModelGroup.traverse((child) => {
+            if (child.isMesh) {
+                // Si el modelo ya trae sus propios materiales/texturas podés comentar la siguiente línea:
+                //child.material = skinMaterial;
+                if (!humanMesh) humanMesh = child;
+            }
+        });
+
+        scene.add(customModelGroup);
+        statusLoader.style.opacity = '0';
+
+        if (tattooTexture) {
+            projectToCenter();
+            applyTattoo();
+        }
+    }
+
+    gltfLoader.load(
+        DEFAULT_MODEL_URL,
+        (gltf) => {
+            setupLoadedModel(gltf.scene);
+        },
+        undefined,
+        (error) => {
+            console.error("Error al cargar modelo por defecto desde GitHub:", error);
+            statusLoader.innerText = "Error cargando modelo desde GitHub";
+        }
+    );
+
+    modelInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        statusLoader.innerText = "Cargando modelo local...";
+        statusLoader.style.opacity = '1';
+
+        const url = URL.createObjectURL(file);
+        gltfLoader.load(url, (gltf) => {
+            setupLoadedModel(gltf.scene);
+        });
+    });
+
+    function removeWhiteBackground(img) {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+
+        const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const data = imgData.data;
+
+        for (let i = 0; i < data.length; i += 4) {
+            if (data[i] > 215 && data[i + 1] > 215 && data[i + 2] > 215) {
+                data[i + 3] = 0;
+            }
+        }
+
+        ctx.putImageData(imgData, 0, 0);
+        return canvas;
+    }
+
+    tattooInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+                const processedCanvas = removeWhiteBackground(img);
+                
+                const texture = new THREE.CanvasTexture(processedCanvas);
+                texture.colorSpace = THREE.SRGBColorSpace;
+                tattooTexture = texture;
+
+                scaleInput.disabled = false;
+                rotateInput.disabled = false;
+                opacityInput.disabled = false;
+                btnRemove.disabled = false;
+                tattooLabel.innerText = "Cambiar Tatuaje";
+
+                projectToCenter();
+                applyTattoo();
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
+    function projectToCenter() {
+        if (!humanMesh && !customModelGroup) return;
+        
+        raycaster.set(new THREE.Vector3(0, 1.25, 2), new THREE.Vector3(0, 0, -1));
+        const target = customModelGroup || humanMesh;
+        const intersects = raycaster.intersectObject(target, true);
+
+        if (intersects.length > 0) {
+            lastHitPoint = intersects[0].point.clone();
+            lastHitNormal = intersects[0].face.normal.clone();
+            lastHitNormal.transformDirection(intersects[0].object.matrixWorld).normalize();
+            humanMesh = intersects[0].object;
+        } else {
+            lastHitPoint = new THREE.Vector3(0, 1.25, 0.18);
+            lastHitNormal = new THREE.Vector3(0, 0, 1);
+        }
+    }
+
+    function applyTattoo() {
+        if (!humanMesh || !tattooTexture || !lastHitPoint || !lastHitNormal) return;
+
+        if (decalMesh) {
+            scene.remove(decalMesh);
+            decalMesh.geometry.dispose();
+            if (decalMesh.material.map) decalMesh.material.map.dispose();
+            decalMesh.material.dispose();
+            decalMesh = null;
+        }
+
+        const position = lastHitPoint.clone();
+        
+        const eye = position.clone().add(lastHitNormal);
+        const rotationMatrix = new THREE.Matrix4();
+        rotationMatrix.lookAt(eye, position, new THREE.Vector3(0, 1, 0));
+
+        const orientation = new THREE.Euler();
+        orientation.setFromRotationMatrix(rotationMatrix);
+        orientation.z += (decalParams.rotation * Math.PI) / 180;
+
+        const size = new THREE.Vector3(
+            decalParams.scale, 
+            decalParams.scale, 
+            decalParams.scale * 1.5
+        );
+
+        const decalGeometry = new DecalGeometry(
+            humanMesh,
+            position,
+            orientation,
+            size
+        );
+
+        const decalMaterial = new THREE.MeshPhongMaterial({
+            map: tattooTexture,
+            transparent: true,
+            opacity: decalParams.opacity,
+            depthTest: true,
+            depthWrite: false,
+            polygonOffset: true,
+            polygonOffsetFactor: -10,
+            shininess: 0
+        });
+
+        decalMesh = new THREE.Mesh(decalGeometry, decalMaterial);
+        scene.add(decalMesh);
+    }
+
+    function updateMouseCoords(e) {
+        const rect = container.getBoundingClientRect();
+        mouse.x = ((e.clientX - rect.left) / container.clientWidth) * 2 - 1;
+        mouse.y = -((e.clientY - rect.top) / container.clientHeight) * 2 + 1;
+    }
+
+    function checkMeshIntersect() {
+        if (!humanMesh && !customModelGroup) return null;
+        raycaster.setFromCamera(mouse, camera);
+        const target = customModelGroup || humanMesh;
+        const intersects = raycaster.intersectObject(target, true);
+        return intersects.length > 0 ? intersects[0] : null;
+    }
+
+    container.addEventListener('pointerdown', (e) => {
+        if (!tattooTexture) return;
+
+        updateMouseCoords(e);
+        const hit = checkMeshIntersect();
+
+        if (hit) {
+            isDraggingTattoo = true;
+            controls.enabled = false;
+            container.classList.add('dragging');
+
+            lastHitPoint = hit.point.clone();
+            lastHitNormal = hit.face.normal.clone();
+            lastHitNormal.transformDirection(hit.object.matrixWorld).normalize();
+            humanMesh = hit.object;
+
+            applyTattoo();
+        }
+    });
+
+    container.addEventListener('pointermove', (e) => {
+        if (!isDraggingTattoo || !tattooTexture) return;
+
+        updateMouseCoords(e);
+        const hit = checkMeshIntersect();
+
+        if (hit) {
+            lastHitPoint = hit.point.clone();
+            lastHitNormal = hit.face.normal.clone();
+            lastHitNormal.transformDirection(hit.object.matrixWorld).normalize();
+            humanMesh = hit.object;
+
+            applyTattoo();
+        }
+    });
+
+    const stopDragging = () => {
+        if (isDraggingTattoo) {
+            isDraggingTattoo = false;
+            controls.enabled = true;
+            container.classList.remove('dragging');
+        }
+    };
+
+    container.addEventListener('pointerup', stopDragging);
+    container.addEventListener('pointerleave', stopDragging);
+
+    scaleInput.addEventListener('input', (e) => {
+        decalParams.scale = parseFloat(e.target.value);
+        applyTattoo();
+    });
+
+    rotateInput.addEventListener('input', (e) => {
+        decalParams.rotation = parseInt(e.target.value);
+        applyTattoo();
+    });
+
+    opacityInput.addEventListener('input', (e) => {
+        decalParams.opacity = parseFloat(e.target.value);
+        if (decalMesh) decalMesh.material.opacity = decalParams.opacity;
+    });
+
+    btnRemove.addEventListener('click', () => {
+        if (decalMesh) {
+            scene.remove(decalMesh);
+            decalMesh.geometry.dispose();
+            decalMesh = null;
+        }
+        lastHitPoint = null;
+        lastHitNormal = null;
+        tattooTexture = null;
+        scaleInput.disabled = true;
+        rotateInput.disabled = true;
+        opacityInput.disabled = true;
+        btnRemove.disabled = true;
+        tattooLabel.innerText = "Subir Tatuaje (PNG / JPG)";
+    });
+
+    btnDownload.addEventListener('click', () => {
+        renderer.render(scene, camera);
+        const imageURI = renderer.domElement.toDataURL('image/png');
+
+        const link = document.createElement('a');
+        link.download = 'simulacion-tatuaje-3d.png';
+        link.href = imageURI;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+</script>
+
+</body>
+</html>
