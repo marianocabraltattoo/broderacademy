@@ -135,6 +135,79 @@
             fill: #000;
         }
 
+        /* Controles 3D en Pantalla (D-Pad Flotante) */
+        .viewport-controls {
+            position: absolute;
+            bottom: 16px;
+            right: 16px;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .dpad-container {
+            display: grid;
+            grid-template-columns: repeat(3, 36px);
+            grid-template-rows: repeat(3, 36px);
+            gap: 4px;
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--panel-border);
+            padding: 6px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .zoom-container {
+            display: flex;
+            gap: 4px;
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--panel-border);
+            padding: 6px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .cam-btn {
+            width: 36px;
+            height: 36px;
+            background: #1e1e1e;
+            border: 1px solid var(--panel-border);
+            color: var(--text-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s ease, transform 0.1s ease;
+        }
+
+        .cam-btn:hover {
+            background: #2a2a2a;
+            border-color: #444;
+        }
+
+        .cam-btn:active {
+            transform: scale(0.92);
+            background: #333;
+        }
+
+        .cam-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--text-primary);
+        }
+
+        .dpad-up    { grid-column: 2; grid-row: 1; }
+        .dpad-left  { grid-column: 1; grid-row: 2; }
+        .dpad-center{ grid-column: 2; grid-row: 2; font-size: 10px; font-weight: 700; color: var(--text-muted); cursor: default; }
+        .dpad-right { grid-column: 3; grid-row: 2; }
+        .dpad-down  { grid-column: 2; grid-row: 3; }
+
         /* Panel Lateral de Controles */
         .controls {
             background-color: var(--panel-bg);
@@ -376,7 +449,7 @@
 
     <header>
         <h1>Simulador de Tatuajes</h1>
-        <p><a href="https://www.instagram.com/mariano.tatu/" target="_blank" rel="noopener noreferrer">Por Mariano Cabral </a></p>
+        <p><a href="https://www.instagram.com/mariano.tatu/" target="_blank" rel="noopener noreferrer">Por Mariano Cabral</a></p>
     </header>
 
     <div class="simulator-container">
@@ -387,12 +460,42 @@
             <div class="instruction-tag">Ubicá el diseño de tu tatuaje en la zona que queres, luego descarga la imágen</div>
             <div id="webgl-container"></div>
 
-            <!-- Botón flotante para subir imágen en Mobile / Integrado en Desktop -->
+            <!-- Botón flotante para subir imagen -->
             <label for="tattooInput" class="floating-upload-btn">
                 <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
                 <span id="tattooLabel">Subir Tatuaje</span>
             </label>
             <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
+
+            <!-- Botonera de Control 3D Flotante -->
+            <div class="viewport-controls">
+                <!-- Rotación (D-Pad) -->
+                <div class="dpad-container">
+                    <button class="cam-btn dpad-up" id="btnRotUp" title="Rotar arriba">
+                        <svg viewBox="0 0 24 24"><path d="M12 8l-6 6h12z"/></svg>
+                    </button>
+                    <button class="cam-btn dpad-left" id="btnRotLeft" title="Rotar izquierda">
+                        <svg viewBox="0 0 24 24"><path d="M14 18l-6-6 6-6z"/></svg>
+                    </button>
+                    <div class="cam-btn dpad-center">3D</div>
+                    <button class="cam-btn dpad-right" id="btnRotRight" title="Rotar derecha">
+                        <svg viewBox="0 0 24 24"><path d="M10 6l6 6-6 6z"/></svg>
+                    </button>
+                    <button class="cam-btn dpad-down" id="btnRotDown" title="Rotar abajo">
+                        <svg viewBox="0 0 24 24"><path d="M12 16l6-6H6z"/></svg>
+                    </button>
+                </div>
+
+                <!-- Zoom (+ / -) -->
+                <div class="zoom-container">
+                    <button class="cam-btn" id="btnZoomIn" title="Acercar (+)">
+                        <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+                    </button>
+                    <button class="cam-btn" id="btnZoomOut" title="Alejar (-)">
+                        <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                    </button>
+                </div>
+            </div>
         </main>
 
         <!-- Controles -->
@@ -410,7 +513,7 @@
 
             <div class="control-section">
                 <div class="section-title">
-                    <span>Rotación</span>
+                    <span>Rotación del Diseño</span>
                     <span id="valRotate" class="value-badge">0°</span>
                 </div>
                 <div class="range-slider">
@@ -769,6 +872,40 @@
         link.download = 'mi-simulacion-tatuaje.png';
         link.href = dataURL;
         link.click();
+    });
+
+    /* --- LÓGICA DE CONTROLES FLOTANTES 3D (D-PAD & ZOOM) --- */
+    const ROTATE_STEP = 0.15;
+    const ZOOM_STEP = 0.2;
+
+    document.getElementById('btnRotLeft').addEventListener('click', () => {
+        controls.rotateLeft(ROTATE_STEP);
+        controls.update();
+    });
+
+    document.getElementById('btnRotRight').addEventListener('click', () => {
+        controls.rotateLeft(-ROTATE_STEP);
+        controls.update();
+    });
+
+    document.getElementById('btnRotUp').addEventListener('click', () => {
+        controls.rotateUp(ROTATE_STEP);
+        controls.update();
+    });
+
+    document.getElementById('btnRotDown').addEventListener('click', () => {
+        controls.rotateUp(-ROTATE_STEP);
+        controls.update();
+    });
+
+    document.getElementById('btnZoomIn').addEventListener('click', () => {
+        controls.dollyIn(1 + ZOOM_STEP);
+        controls.update();
+    });
+
+    document.getElementById('btnZoomOut').addEventListener('click', () => {
+        controls.dollyOut(1 + ZOOM_STEP);
+        controls.update();
     });
 
     window.addEventListener('resize', () => {
