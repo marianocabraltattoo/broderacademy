@@ -6,18 +6,24 @@
     <title>Simulador de Tatuaje 3D | Broder Academy</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         :root {
-            --bg-color: #0d0d0d;
-            --panel-bg: #161616;
-            --border-color: #262626;
+            --bg-color: #0a0a0a;
+            --panel-bg: #141414;
+            --panel-border: #242424;
+            --panel-hover: #1e1e1e;
             --text-primary: #f5f5f5;
-            --text-muted: #888888;
+            --text-muted: #8e8e93;
             --accent: #ffffff;
-            --font-main: 'Helvetica Neue', 'Inter', -apple-system, sans-serif;
+            --accent-glow: rgba(255, 255, 255, 0.15);
+            --danger: #e54d42;
+            --danger-bg: rgba(229, 77, 66, 0.1);
+            --font-main: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
         }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
@@ -26,85 +32,299 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 24px 16px;
+            -webkit-font-smoothing: antialiased;
         }
-        header { text-align: center; margin-bottom: 24px; }
-        header h1 { font-size: 1.5rem; text-transform: uppercase; letter-spacing: -0.02em; }
-        header p { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
-        .simulator-container { display: flex; flex-direction: column; gap: 20px; width: 100%; max-width: 1100px; }
+
+        header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.01em;
+        }
+
+        header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 6px;
+            letter-spacing: 0.02em;
+        }
+
+        .simulator-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 1180px;
+        }
+
+        /* Panel Lateral de Control */
         .controls {
             background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 20px;
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            padding: 24px;
             display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: space-between;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         }
-        .upload-group, .slider-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
-        label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); font-weight: 600; }
+
+        .control-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .section-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .value-badge {
+            font-size: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+            background: #202020;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--panel-border);
+        }
+
         input[type="file"] { display: none; }
-        .btn-upload, .btn-action {
+
+        /* Estilo Dropzone / Upload Button */
+        .upload-dropzone {
+            border: 1px dashed var(--panel-border);
+            background-color: #1a1a1a;
+            border-radius: 10px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            text-align: center;
+        }
+
+        .upload-dropzone:hover {
+            border-color: #555555;
+            background-color: var(--panel-hover);
+            transform: translateY(-1px);
+        }
+
+        .upload-dropzone svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--text-muted);
+            transition: fill 0.2s ease;
+        }
+
+        .upload-dropzone:hover svg {
+            fill: var(--text-primary);
+        }
+
+        .upload-dropzone span {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .upload-dropzone small {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Sliders */
+        .slider-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .range-slider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #282828;
+            border-radius: 3px;
+            outline: none;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        input[type="range"]:hover:not(:disabled) {
+            background: #383838;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+            transition: transform 0.15s ease, background-color 0.2s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        input[type="range"]:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Botones de Acción */
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             background-color: #222222;
             color: var(--text-primary);
-            border: 1px solid var(--border-color);
-            padding: 10px 14px;
-            border-radius: 6px;
+            border: 1px solid var(--panel-border);
+            padding: 12px 16px;
+            border-radius: 8px;
             cursor: pointer;
             text-align: center;
             font-size: 0.85rem;
+            font-weight: 600;
             transition: all 0.2s ease;
         }
-        .btn-upload:hover, .btn-action:hover:not(:disabled) { border-color: #555555; background-color: #2a2a2a; }
-        .btn-action:disabled { opacity: 0.4; cursor: not-allowed; }
-        .btn-download { background-color: #ffffff; color: #000000; font-weight: 600; }
-        .btn-download:hover { background-color: #e0e0e0; }
-        .range-slider { display: flex; align-items: center; gap: 10px; }
-        input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+        .btn-action:hover:not(:disabled) {
+            border-color: #444444;
+            background-color: #2a2a2a;
+        }
+
+        .btn-action:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            border-color: transparent;
+        }
+
+        .btn-danger {
+            background-color: transparent;
+            color: var(--danger);
+            border: 1px solid rgba(229, 77, 66, 0.3);
+        }
+
+        .btn-danger:hover:not(:disabled) {
+            background-color: var(--danger-bg);
+            border-color: var(--danger);
+        }
+
+        .btn-download {
+            background-color: var(--accent);
+            color: #000000;
+            border: none;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-download:hover {
+            background-color: #e5e5e5;
+            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Canvas Wrapper & Feedback Floating Elements */
         .canvas-wrapper {
             position: relative;
             width: 100%;
             background-color: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 500px;
+            min-height: 520px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         }
-        #webgl-container { width: 100%; height: 100%; min-height: 500px; cursor: grab; }
-        #webgl-container.dragging { cursor: move; }
+
+        #webgl-container {
+            width: 100%;
+            height: 100%;
+            min-height: 520px;
+            cursor: grab;
+        }
+
+        #webgl-container.dragging {
+            cursor: grabbing;
+        }
+
         .status-loader {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.75);
-            border: 1px solid var(--border-color);
+            top: 16px;
+            right: 16px;
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--panel-border);
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 0.75rem;
+            font-weight: 500;
             color: var(--text-primary);
             pointer-events: none;
             transition: opacity 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
         .instruction-tag {
             position: absolute;
-            bottom: 12px;
-            left: 12px;
-            background-color: rgba(0, 0, 0, 0.7);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 6px;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 20, 20, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--panel-border);
+            padding: 8px 16px;
+            border-radius: 20px;
             font-size: 0.75rem;
             color: var(--text-muted);
             pointer-events: none;
+            white-space: nowrap;
         }
-        @media (min-width: 768px) {
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background: var(--panel-border);
+            margin: 4px 0;
+        }
+
+        @media (min-width: 860px) {
             .simulator-container { flex-direction: row; }
-            .controls { flex-direction: column; width: 290px; flex-shrink: 0; }
-            .canvas-wrapper { flex: 1; min-height: 580px; }
+            .controls { width: 320px; flex-shrink: 0; }
+            .canvas-wrapper { flex: 1; min-height: 640px; }
+            #webgl-container { min-height: 640px; }
+            .instruction-tag { left: 16px; transform: none; }
         }
     </style>
     <script type="importmap">
@@ -120,54 +340,81 @@
 
     <header>
         <h1>Simulador de Tatuajes 3D</h1>
-        <p>Proyección Anatómica en Tiempo Real</p>
+        <p>Proyección Anatómica en Tiempo Real — Broder Academy</p>
     </header>
 
     <div class="simulator-container">
         <aside class="controls">
-            <div class="upload-group">
-                <label>1. Diseño del Tatuaje</label>
-                <label for="tattooInput" class="btn-upload" id="tattooLabel">Subir Tatuaje (PNG / JPG)</label>
+            
+            <!-- Carga de Archivos -->
+            <div class="control-section">
+                <span class="section-title">1. Diseño del Tatuaje</span>
+                <label for="tattooInput" class="upload-dropzone">
+                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                    <span id="tattooLabel">Subir Tatuaje</span>
+                    <small>PNG (Fondo Transparente) / JPG</small>
+                </label>
                 <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
             </div>
 
-            <div class="upload-group">
-                <label>2. Modelo 3D Personalizado (.GLB)</label>
-                <label for="modelInput" class="btn-upload" style="background-color: #1a1a1a;">Subir Otro Modelo</label>
+            <div class="control-section">
+                <span class="section-title">2. Modelo 3D (.GLB)</span>
+                <label for="modelInput" class="upload-dropzone" style="padding: 10px;">
+                    <span style="font-size: 0.78rem;">Cargar Modelo Personalizado</span>
+                </label>
                 <input type="file" id="modelInput" accept=".glb, .gltf">
             </div>
 
-            <hr style="border-color: var(--border-color); margin: 2px 0;">
+            <hr class="divider">
 
-            <div class="slider-group">
-                <label for="scale">Tamaño / Escala</label>
+            <!-- Ajustes de Estampa -->
+            <div class="control-section">
+                <div class="section-title">
+                    <span>Tamaño / Escala</span>
+                    <span id="valScale" class="value-badge">25%</span>
+                </div>
                 <div class="range-slider">
                     <input type="range" id="scale" min="0.05" max="0.8" step="0.01" value="0.25" disabled>
                 </div>
             </div>
 
-            <div class="slider-group">
-                <label for="rotate">Rotación</label>
+            <div class="control-section">
+                <div class="section-title">
+                    <span>Rotación</span>
+                    <span id="valRotate" class="value-badge">0°</span>
+                </div>
                 <div class="range-slider">
                     <input type="range" id="rotate" min="0" max="360" value="0" disabled>
                 </div>
             </div>
 
-            <div class="slider-group">
-                <label for="opacity">Opacidad (Tinta)</label>
+            <div class="control-section">
+                <div class="section-title">
+                    <span>Opacidad (Tinta)</span>
+                    <span id="valOpacity" class="value-badge">85%</span>
+                </div>
                 <div class="range-slider">
                     <input type="range" id="opacity" min="0.1" max="1" step="0.05" value="0.85" disabled>
                 </div>
             </div>
 
-            <button id="btnRemove" class="btn-action" style="margin-top: 10px;" disabled>Eliminar Tatuaje</button>
-            <button id="btnDownload" class="btn-action btn-download" style="margin-top: 5px;">Descargar Captura</button>
+            <hr class="divider">
+
+            <!-- Botones de Acción -->
+            <button id="btnRemove" class="btn-action btn-danger" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                Eliminar Tatuaje
+            </button>
+            <button id="btnDownload" class="btn-action btn-download">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                Descargar Captura
+            </button>
         </aside>
 
         <main class="canvas-wrapper">
             <div id="statusLoader" class="status-loader">Cargando modelo anatómico...</div>
             <div id="webgl-container"></div>
-            <div class="instruction-tag">Arrastrá sobre la piel para ubicar el tatuaje | Rotá con el mouse</div>
+            <div class="instruction-tag">💡 Haz clic y arrastra sobre la piel para mover el tatuaje | Rotar vista con el mouse</div>
         </main>
     </div>
 
@@ -180,7 +427,7 @@
     const container = document.getElementById('webgl-container');
     const statusLoader = document.getElementById('statusLoader');
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x161616);
+    scene.background = new THREE.Color(0x141414);
 
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
     camera.position.set(0, 0.9, 3.2);
@@ -230,6 +477,11 @@
     const btnRemove = document.getElementById('btnRemove');
     const btnDownload = document.getElementById('btnDownload');
 
+    // UI Badges
+    const valScale = document.getElementById('valScale');
+    const valRotate = document.getElementById('valRotate');
+    const valOpacity = document.getElementById('valOpacity');
+
     const skinMaterial = new THREE.MeshStandardMaterial({
         color: 0xe0ba9e,
         roughness: 0.55,
@@ -238,7 +490,6 @@
 
     const gltfLoader = new GLTFLoader();
 
-    // URL usando jsDelivr apuntando directamente a tu commit de GitHub
     const DEFAULT_MODEL_URL = 'https://cdn.jsdelivr.net/gh/marianocabraltattoo/broderacademy@0b6625f3c005149981e2f7f916e48cf34b8ddb2a/sculpting_a_human_body.glb';
 
     function setupLoadedModel(gltfGroup) {
@@ -247,7 +498,6 @@
 
         customModelGroup = gltfGroup;
 
-        // Centrar y escalar automáticamente la escultura
         const box = new THREE.Box3().setFromObject(customModelGroup);
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
@@ -264,8 +514,6 @@
         humanMesh = null;
         customModelGroup.traverse((child) => {
             if (child.isMesh) {
-                // Si el modelo ya trae sus propios materiales/texturas podés comentar la siguiente línea:
-                //child.material = skinMaterial;
                 if (!humanMesh) humanMesh = child;
             }
         });
@@ -287,7 +535,7 @@
         undefined,
         (error) => {
             console.error("Error al cargar modelo por defecto desde GitHub:", error);
-            statusLoader.innerText = "Error cargando modelo desde GitHub";
+            statusLoader.innerText = "Error cargando modelo";
         }
     );
 
@@ -480,18 +728,22 @@
     container.addEventListener('pointerup', stopDragging);
     container.addEventListener('pointerleave', stopDragging);
 
+    // Eventos Sliders con Feedback UI
     scaleInput.addEventListener('input', (e) => {
         decalParams.scale = parseFloat(e.target.value);
+        valScale.innerText = `${Math.round(decalParams.scale * 100)}%`;
         applyTattoo();
     });
 
     rotateInput.addEventListener('input', (e) => {
         decalParams.rotation = parseInt(e.target.value);
+        valRotate.innerText = `${decalParams.rotation}°`;
         applyTattoo();
     });
 
     opacityInput.addEventListener('input', (e) => {
         decalParams.opacity = parseFloat(e.target.value);
+        valOpacity.innerText = `${Math.round(decalParams.opacity * 100)}%`;
         if (decalMesh) decalMesh.material.opacity = decalParams.opacity;
     });
 
@@ -508,7 +760,7 @@
         rotateInput.disabled = true;
         opacityInput.disabled = true;
         btnRemove.disabled = true;
-        tattooLabel.innerText = "Subir Tatuaje (PNG / JPG)";
+        tattooLabel.innerText = "Subir Tatuaje";
     });
 
     btnDownload.addEventListener('click', () => {
