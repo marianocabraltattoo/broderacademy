@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Simulador de Tatuajes | Broder Academy</title>
 
     <!-- Favicon principal .ico -->
@@ -13,8 +13,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        /* ----------------------------------------------------
+           BLOQUEO TOTAL DE SELECCIÓN Y MENÚS EN MÓVILES/DESKTOP
+        ---------------------------------------------------- */
+        *, *::before, *::after {
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box;
+
+            /* Deshabilitar selección de texto */
+            -webkit-user-select: none !important;
+            -moz-user-select: none !important;
+            -ms-user-select: none !important;
+            user-select: none !important;
+
+            /* Eliminar recuadro/resaltado azul o gris al tocar en iOS/Android */
+            -webkit-tap-highlight-color: transparent !important;
+            -webkit-touch-callout: none !important; /* Desactiva el menú al mantener presionado */
+        }
+
+        img, svg {
+            -webkit-user-drag: none;
+            user-drag: none;
+            pointer-events: none;
+        }
+
         :root {
             --bg-color: #0a0a0a;
             --panel-bg: #141414;
@@ -28,6 +51,13 @@
             --font-main: 'Helvetica Neue', 'Inter', -apple-system, sans-serif;
         }
 
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+
         body {
             background-color: var(--bg-color);
             color: var(--text-primary);
@@ -38,8 +68,6 @@
             align-items: center;
             padding: 16px;
             -webkit-font-smoothing: antialiased;
-            user-select: none;
-            touch-action: manipulation;
         }
 
         header {
@@ -94,7 +122,7 @@
             height: 60vh;
             min-height: 440px;
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-            touch-action: none;
+            touch-action: none; /* Previene scroll por gestos sobre el canvas */
         }
 
         #webgl-container {
@@ -138,6 +166,7 @@
             width: 18px;
             height: 18px;
             fill: #000;
+            pointer-events: none;
         }
 
         /* Widget de Control 3D (Trackpad Flotante) */
@@ -227,7 +256,6 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            user-select: none;
             transition: background 0.15s ease, transform 0.1s ease;
         }
 
@@ -477,7 +505,6 @@
             .floating-upload-btn svg { fill: var(--text-primary); }
         }
     </style>
-
     <script type="importmap">
         {
             "imports": {
@@ -499,7 +526,7 @@
         <!-- Canvas Viewer -->
         <main class="canvas-wrapper">
             <div id="statusLoader" class="status-loader">Cargando modelo 3D...</div>
-            <div class="instruction-tag">Arrastrá para posicionar | Usá 2 dedos para zoom | Usá el pad 3D para rotar</div>
+            <div class="instruction-tag">Arrastrá para posicionar | 2 dedos para zoom | Usá el pad 3D para rotar</div>
             <div id="webgl-container"></div>
 
             <!-- Botón flotante para subir imagen -->
@@ -579,6 +606,24 @@
         <p class="copyright">© Mariano Cabral — Todos los derechos reservados</p>
     </footer>
 
+    <!-- SCRIPT DE BLOQUEO DE SELECCIÓN VÍA JS -->
+    <script>
+        // Bloquea el menú contextual en toda la aplicación (evita "Copiar", "Guardar Imagen", etc.)
+        document.addEventListener('contextmenu', function (e) {
+            e.preventDefault();
+        }, false);
+
+        // Bloquea arrastre nativo de elementos del navegador
+        document.addEventListener('dragstart', function (e) {
+            e.preventDefault();
+        }, false);
+
+        // Previene la selección por gestos en iOS / Android al mantener presionado
+        document.addEventListener('selectstart', function (e) {
+            e.preventDefault();
+        }, false);
+    </script>
+
     <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -602,13 +647,13 @@
     renderer.toneMappingExposure = 1.1;
     container.appendChild(renderer.domElement);
 
-    // OrbitControls se restringe exclusivamente al Pad Flotante
+    // OrbitControls se restringe al Pad Flotante
     const orbitTrackpad = document.getElementById('orbitTrackpad');
     const controls = new OrbitControls(camera, orbitTrackpad);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.target.copy(initialTarget);
-    controls.enableZoom = false; // Sin zoom por rueda ni por click accidental
+    controls.enableZoom = false;
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
@@ -641,6 +686,7 @@
     const rotateInput = document.getElementById('rotate');
     const btnRemove = document.getElementById('btnRemove');
     const btnDownload = document.getElementById('btnDownload');
+    const btnResetCam = document.getElementById('btnResetCam');
 
     const valScale = document.getElementById('valScale');
     const valRotate = document.getElementById('valRotate');
@@ -860,7 +906,6 @@
         }
     });
 
-    // Interacción en la Pantalla Principal (Mover Tatuaje con Single Pointer/Touch)
     container.addEventListener('pointerdown', (e) => {
         if (e.target.closest('.viewport-orbit-controller') || e.target.closest('.floating-upload-btn')) {
             return;
@@ -905,22 +950,19 @@
     });
 
     window.addEventListener('pointerup', () => {
-        if (isDraggingTattoo) {
-            isDraggingTattoo = false;
-            container.classList.remove('dragging');
-        }
+        isDraggingTattoo = false;
+        container.classList.remove('dragging');
     });
 
-    // Eventos UI Controles Tatuaje
     scaleInput.addEventListener('input', (e) => {
         decalParams.scale = parseFloat(e.target.value);
-        valScale.innerText = Math.round((decalParams.scale / 0.8) * 100) + '%';
+        valScale.innerText = `${Math.round((decalParams.scale / 0.8) * 100)}%`;
         applyTattoo();
     });
 
     rotateInput.addEventListener('input', (e) => {
         decalParams.rotation = parseFloat(e.target.value);
-        valRotate.innerText = decalParams.rotation + '°';
+        valRotate.innerText = `${decalParams.rotation}°`;
         applyTattoo();
     });
 
@@ -928,39 +970,30 @@
         if (decalMesh) {
             scene.remove(decalMesh);
             decalMesh.geometry.dispose();
-            if (decalMesh.material.map) decalMesh.material.map.dispose();
             decalMesh.material.dispose();
             decalMesh = null;
         }
         tattooTexture = null;
         tattooInput.value = '';
-        tattooLabel.innerText = 'Subir Tatuaje';
-
         scaleInput.disabled = true;
         rotateInput.disabled = true;
         btnRemove.disabled = true;
+        tattooLabel.innerText = "Subir Tatuaje";
+    });
+
+    btnResetCam.addEventListener('click', () => {
+        camera.position.copy(initialCamPos);
+        controls.target.copy(initialTarget);
+        controls.update();
     });
 
     btnDownload.addEventListener('click', () => {
         renderer.render(scene, camera);
         const dataURL = renderer.domElement.toDataURL('image/png');
         const link = document.createElement('a');
-        link.download = 'simulacion-tatuaje.png';
+        link.download = 'simulacion-tatuaje-broder.png';
         link.href = dataURL;
         link.click();
-    });
-
-    document.getElementById('btnResetCam').addEventListener('click', () => {
-        camera.position.copy(initialCamPos);
-        controls.target.copy(initialTarget);
-        controls.update();
-    });
-
-    // Resize Handler
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
     });
 
     function animate() {
@@ -968,8 +1001,13 @@
         controls.update();
         renderer.render(scene, camera);
     }
-
     animate();
+
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
     </script>
 </body>
 </html>
