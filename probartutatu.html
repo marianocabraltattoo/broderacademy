@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -37,6 +38,7 @@
             align-items: center;
             padding: 16px;
             -webkit-font-smoothing: antialiased;
+            user-select: none;
         }
 
         header {
@@ -89,21 +91,22 @@
             justify-content: center;
             align-items: center;
             height: 60vh;
-            min-height: 420px;
+            min-height: 440px;
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         }
 
         #webgl-container {
             width: 100%;
             height: 100%;
-            cursor: grab;
+            cursor: crosshair;
+            touch-action: none;
         }
 
         #webgl-container.dragging {
             cursor: grabbing;
         }
 
-        /* Botón Cargar Flotante (Mobile) */
+        /* Botón Cargar Flotante */
         .floating-upload-btn {
             position: absolute;
             bottom: 16px;
@@ -135,49 +138,88 @@
             fill: #000;
         }
 
-        /* Controles 3D en Pantalla (D-Pad Flotante) */
-        .viewport-controls {
+        /* Widget de Control 3D (Trackpad Flotante) */
+        .viewport-orbit-controller {
             position: absolute;
             bottom: 16px;
             right: 16px;
-            z-index: 10;
+            z-index: 20;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            align-items: center;
+            gap: 8px;
+            align-items: flex-end;
         }
 
-        .dpad-container {
-            display: grid;
-            grid-template-columns: repeat(3, 36px);
-            grid-template-rows: repeat(3, 36px);
-            gap: 4px;
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--panel-border);
-            padding: 6px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .zoom-container {
+        .orbit-pad {
+            width: 110px;
+            height: 110px;
+            background: rgba(20, 20, 20, 0.88);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
             display: flex;
-            gap: 4px;
-            background: rgba(20, 20, 20, 0.85);
-            backdrop-filter: blur(8px);
-            border: 1px solid var(--panel-border);
-            padding: 6px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: grab;
+            touch-action: none;
+            position: relative;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .orbit-pad:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .orbit-pad:active {
+            cursor: grabbing;
+            border-color: var(--accent);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.2);
+        }
+
+        .orbit-pad-center {
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .orbit-pad-center svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--text-primary);
+            opacity: 0.9;
+        }
+
+        .orbit-pad-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .orbit-actions {
+            display: flex;
+            gap: 6px;
+            background: rgba(20, 20, 20, 0.88);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 4px;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
         }
 
         .cam-btn {
-            width: 36px;
-            height: 36px;
+            width: 30px;
+            height: 30px;
             background: #1e1e1e;
             border: 1px solid var(--panel-border);
             color: var(--text-primary);
-            border-radius: 8px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -188,7 +230,7 @@
 
         .cam-btn:hover {
             background: #2a2a2a;
-            border-color: #444;
+            border-color: #555;
         }
 
         .cam-btn:active {
@@ -197,16 +239,10 @@
         }
 
         .cam-btn svg {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             fill: var(--text-primary);
         }
-
-        .dpad-up    { grid-column: 2; grid-row: 1; }
-        .dpad-left  { grid-column: 1; grid-row: 2; }
-        .dpad-center{ grid-column: 2; grid-row: 2; font-size: 10px; font-weight: 700; color: var(--text-muted); cursor: default; }
-        .dpad-right { grid-column: 3; grid-row: 2; }
-        .dpad-down  { grid-column: 2; grid-row: 3; }
 
         /* Panel Lateral de Controles */
         .controls {
@@ -338,6 +374,7 @@
             color: var(--text-primary);
             pointer-events: none;
             transition: opacity 0.3s ease;
+            z-index: 15;
         }
 
         .instruction-tag {
@@ -352,6 +389,7 @@
             font-size: 0.7rem;
             color: var(--text-muted);
             pointer-events: none;
+            z-index: 15;
         }
 
         .divider {
@@ -456,8 +494,8 @@
         
         <!-- Canvas Viewer -->
         <main class="canvas-wrapper">
-            <div id="statusLoader" class="status-loader">Cargando modelo...</div>
-            <div class="instruction-tag">Ubicá el diseño de tu tatuaje en la zona que queres, luego descarga la imágen</div>
+            <div id="statusLoader" class="status-loader">Cargando modelo 3D...</div>
+            <div class="instruction-tag">Arrastrá para posicionar el tatuaje | Usá el pad 3D para rotar el modelo</div>
             <div id="webgl-container"></div>
 
             <!-- Botón flotante para subir imagen -->
@@ -467,38 +505,29 @@
             </label>
             <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
 
-            <!-- Botonera de Control 3D Flotante (Afecta directamente al modelo) -->
-            <div class="viewport-controls">
-                <!-- Rotación del Modelo -->
-                <div class="dpad-container">
-                    <button class="cam-btn dpad-up" id="btnRotUp" title="Rotar modelo hacia arriba">
-                        <svg viewBox="0 0 24 24"><path d="M12 8l-6 6h12z"/></svg>
-                    </button>
-                    <button class="cam-btn dpad-left" id="btnRotLeft" title="Rotar modelo a la izquierda">
-                        <svg viewBox="0 0 24 24"><path d="M14 18l-6-6 6-6z"/></svg>
-                    </button>
-                    <div class="cam-btn dpad-center">3D</div>
-                    <button class="cam-btn dpad-right" id="btnRotRight" title="Rotar modelo a la derecha">
-                        <svg viewBox="0 0 24 24"><path d="M10 6l6 6-6 6z"/></svg>
-                    </button>
-                    <button class="cam-btn dpad-down" id="btnRotDown" title="Rotar modelo hacia abajo">
-                        <svg viewBox="0 0 24 24"><path d="M12 16l6-6H6z"/></svg>
-                    </button>
+            <!-- Control 3D Exclusivo (Pad Flotante para Mover/Rotar/Zoom Cámara 3D) -->
+            <div class="viewport-orbit-controller">
+                <div class="orbit-pad" id="orbitTrackpad" title="Mover / Rotar modelo 3D">
+                    <div class="orbit-pad-center">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                        <span class="orbit-pad-label">Rotar 3D</span>
+                    </div>
                 </div>
-
-                <!-- Escala / Tamaño del Modelo (+ / -) -->
-                <div class="zoom-container">
-                    <button class="cam-btn" id="btnZoomIn" title="Aumentar modelo (+)">
+                <div class="orbit-actions">
+                    <button class="cam-btn" id="btnZoomIn" title="Acercar (+)">
                         <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
                     </button>
-                    <button class="cam-btn" id="btnZoomOut" title="Reducir modelo (-)">
+                    <button class="cam-btn" id="btnZoomOut" title="Alejar (-)">
                         <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
+                    </button>
+                    <button class="cam-btn" id="btnResetCam" title="Reiniciar Cámara">
+                        <svg viewBox="0 0 24 24"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
                     </button>
                 </div>
             </div>
         </main>
 
-        <!-- Controles -->
+        <!-- Controles Lateral -->
         <aside class="controls">
 
             <div class="control-section">
@@ -564,7 +593,9 @@
     scene.background = new THREE.Color(0x141414);
 
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
-    camera.position.set(0, 0.9, 3.2);
+    const initialCamPos = new THREE.Vector3(0, 0.9, 3.2);
+    const initialTarget = new THREE.Vector3(0, 0.9, 0);
+    camera.position.copy(initialCamPos);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -573,9 +604,13 @@
     renderer.toneMappingExposure = 1.1;
     container.appendChild(renderer.domElement);
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+    // OrbitControls se restringe exclusivamente al Pad Flotante
+    const orbitTrackpad = document.getElementById('orbitTrackpad');
+    const controls = new OrbitControls(camera, orbitTrackpad);
     controls.enableDamping = true;
-    controls.target.set(0, 0.9, 0);
+    controls.dampingFactor = 0.05;
+    controls.target.copy(initialTarget);
+    controls.enabled = true; // Solo responde al estar interactuando sobre el pad
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.4);
     scene.add(ambientLight);
@@ -788,15 +823,18 @@
         return intersects.length > 0 ? intersects[0] : null;
     }
 
+    // Interacción en la Pantalla Principal (Mover Tatuaje)
     container.addEventListener('pointerdown', (e) => {
-        if (!tattooTexture) return;
-
+        // Evitar activar si el clic fue en el trackpad u otros botones
+        if (e.target.closest('.viewport-orbit-controller') || e.target.closest('.floating-upload-btn')) {
+            return;
+        }
+        
         updateMouseCoords(e);
         const hit = checkMeshIntersect();
 
         if (hit) {
             isDraggingTattoo = true;
-            controls.enabled = false;
             container.classList.add('dragging');
 
             lastHitPoint = hit.point.clone();
@@ -804,12 +842,14 @@
             lastHitNormal.transformDirection(hit.object.matrixWorld).normalize();
             humanMesh = hit.object;
 
-            applyTattoo();
+            if (tattooTexture) {
+                applyTattoo();
+            }
         }
     });
 
     container.addEventListener('pointermove', (e) => {
-        if (!isDraggingTattoo || !tattooTexture) return;
+        if (!isDraggingTattoo) return;
 
         updateMouseCoords(e);
         const hit = checkMeshIntersect();
@@ -820,18 +860,20 @@
             lastHitNormal.transformDirection(hit.object.matrixWorld).normalize();
             humanMesh = hit.object;
 
-            applyTattoo();
+            if (tattooTexture) {
+                applyTattoo();
+            }
         }
     });
 
     window.addEventListener('pointerup', () => {
         if (isDraggingTattoo) {
             isDraggingTattoo = false;
-            controls.enabled = true;
             container.classList.remove('dragging');
         }
     });
 
+    // Eventos UI Controles Tatuaje
     scaleInput.addEventListener('input', (e) => {
         decalParams.scale = parseFloat(e.target.value);
         valScale.innerText = Math.round((decalParams.scale / 0.8) * 100) + '%';
@@ -865,56 +907,42 @@
         renderer.render(scene, camera);
         const dataURL = renderer.domElement.toDataURL('image/png');
         const link = document.createElement('a');
-        link.download = 'mi-simulacion-tatuaje.png';
+        link.download = 'simulacion-tatuaje.png';
         link.href = dataURL;
         link.click();
     });
 
-    /* --- LÓGICA APLICADA EXCLUSIVAMENTE AL MODELO 3D --- */
-    const ROTATE_STEP_MODEL = 0.15; // Ángulo de rotación en radianes
-    const SCALE_STEP_MODEL = 0.08;  // Factor de escala
-
-    // Rotar Modelo
-    document.getElementById('btnRotLeft').addEventListener('click', () => {
-        if (customModelGroup) customModelGroup.rotation.y += ROTATE_STEP_MODEL;
-    });
-
-    document.getElementById('btnRotRight').addEventListener('click', () => {
-        if (customModelGroup) customModelGroup.rotation.y -= ROTATE_STEP_MODEL;
-    });
-
-    document.getElementById('btnRotUp').addEventListener('click', () => {
-        if (customModelGroup) customModelGroup.rotation.x -= ROTATE_STEP_MODEL;
-    });
-
-    document.getElementById('btnRotDown').addEventListener('click', () => {
-        if (customModelGroup) customModelGroup.rotation.x += ROTATE_STEP_MODEL;
-    });
-
-    // Escalar Modelo (+ / -)
+    // Botones del Control 3D Flotante (Zoom y Reset)
     document.getElementById('btnZoomIn').addEventListener('click', () => {
-        if (customModelGroup) {
-            customModelGroup.scale.multiplyScalar(1 + SCALE_STEP_MODEL);
-        }
+        camera.position.sub(controls.target).multiplyScalar(0.88).add(controls.target);
+        controls.update();
     });
 
     document.getElementById('btnZoomOut').addEventListener('click', () => {
-        if (customModelGroup) {
-            customModelGroup.scale.multiplyScalar(1 - SCALE_STEP_MODEL);
-        }
+        camera.position.sub(controls.target).multiplyScalar(1.12).add(controls.target);
+        controls.update();
     });
 
+    document.getElementById('btnResetCam').addEventListener('click', () => {
+        camera.position.copy(initialCamPos);
+        controls.target.copy(initialTarget);
+        controls.update();
+    });
+
+    // Resize Handler
     window.addEventListener('resize', () => {
         camera.aspect = container.clientWidth / container.clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(container.clientWidth, container.clientHeight);
     });
 
+    // Bucle de Render
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
     }
+
     animate();
     </script>
 </body>
