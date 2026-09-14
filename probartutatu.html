@@ -140,7 +140,7 @@
             fill: #000;
         }
 
-        /* Widget de Control 3D (Trackpad Flotante) - Modificado sin botones de Zoom */
+        /* Widget de Control 3D (Trackpad Flotante) */
         .viewport-orbit-controller {
             position: absolute;
             bottom: 16px;
@@ -477,6 +477,7 @@
             .floating-upload-btn svg { fill: var(--text-primary); }
         }
     </style>
+
     <script type="importmap">
         {
             "imports": {
@@ -508,7 +509,7 @@
             </label>
             <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
 
-            <!-- Control 3D Exclusivo (Pad Flotante y Botón Reset únicamente) -->
+            <!-- Control 3D Exclusivo (Pad Flotante y Botón Reset) -->
             <div class="viewport-orbit-controller">
                 <div class="orbit-pad" id="orbitTrackpad" title="Mover / Rotar modelo 3D">
                     <div class="orbit-pad-center">
@@ -824,7 +825,6 @@
 
     container.addEventListener('touchstart', (e) => {
         if (e.touches.length === 2) {
-            // Iniciar pinch-to-zoom
             isDraggingTattoo = false;
             container.classList.remove('dragging');
             const dx = e.touches[0].clientX - e.touches[1].clientX;
@@ -842,7 +842,6 @@
 
             const zoomFactor = initialPinchDistance / currentPinchDistance;
             
-            // Ajustar posición de cámara respetando límites
             const dir = camera.position.clone().sub(controls.target);
             const newDist = dir.length() * (zoomFactor > 1 ? 1.03 : 0.97);
 
@@ -863,7 +862,6 @@
 
     // Interacción en la Pantalla Principal (Mover Tatuaje con Single Pointer/Touch)
     container.addEventListener('pointerdown', (e) => {
-        // Evitar si fue en el trackpad u otros botones
         if (e.target.closest('.viewport-orbit-controller') || e.target.closest('.floating-upload-btn')) {
             return;
         }
