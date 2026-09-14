@@ -18,10 +18,10 @@
             --text-primary: #f5f5f5;
             --text-muted: #8e8e93;
             --accent: #ffffff;
-            --accent-glow: rgba(255, 255, 255, 0.15);
             --danger: #e54d42;
             --danger-bg: rgba(229, 77, 66, 0.1);
-            --font-main: 'Helvetica Neue', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --whatsapp-color: #25D366;
+            --font-main: 'Helvetica Neue', 'Inter', -apple-system, sans-serif;
         }
 
         body {
@@ -32,53 +32,111 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 24px 16px;
+            padding: 16px;
             -webkit-font-smoothing: antialiased;
         }
 
         header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
 
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: -0.01em;
         }
 
         header p {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 6px;
-            letter-spacing: 0.02em;
+            margin-top: 4px;
         }
 
         .simulator-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             width: 100%;
             max-width: 1180px;
+            position: relative;
         }
 
-        /* Panel Lateral de Control */
+        /* Canvas Wrapper */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 16px;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 60vh;
+            min-height: 420px;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        #webgl-container {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+
+        #webgl-container.dragging {
+            cursor: grabbing;
+        }
+
+        /* Botón Cargar Flotante (Mobile) */
+        .floating-upload-btn {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000000;
+            padding: 10px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(8px);
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .floating-upload-btn:hover {
+            transform: scale(1.03);
+            background: #ffffff;
+        }
+
+        .floating-upload-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: #000;
+        }
+
+        /* Panel Lateral de Controls */
         .controls {
             background-color: var(--panel-bg);
             border: 1px solid var(--panel-border);
             border-radius: 16px;
-            padding: 24px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 16px;
             box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         }
 
         .control-section {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .section-title {
@@ -96,7 +154,6 @@
             font-size: 0.75rem;
             color: var(--text-primary);
             font-weight: 600;
-            font-variant-numeric: tabular-nums;
             background: #202020;
             padding: 2px 8px;
             border-radius: 4px;
@@ -105,57 +162,7 @@
 
         input[type="file"] { display: none; }
 
-        /* Estilo Dropzone / Upload Button */
-        .upload-dropzone {
-            border: 1px dashed var(--panel-border);
-            background-color: #1a1a1a;
-            border-radius: 10px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            text-align: center;
-        }
-
-        .upload-dropzone:hover {
-            border-color: #555555;
-            background-color: var(--panel-hover);
-            transform: translateY(-1px);
-        }
-
-        .upload-dropzone svg {
-            width: 22px;
-            height: 22px;
-            fill: var(--text-muted);
-            transition: fill 0.2s ease;
-        }
-
-        .upload-dropzone:hover svg {
-            fill: var(--text-primary);
-        }
-
-        .upload-dropzone span {
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .upload-dropzone small {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
         /* Sliders */
-        .slider-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
         .range-slider {
             display: flex;
             align-items: center;
@@ -170,27 +177,15 @@
             border-radius: 3px;
             outline: none;
             cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        input[type="range"]:hover:not(:disabled) {
-            background: #383838;
         }
 
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             background: var(--accent);
             cursor: pointer;
-            box-shadow: 0 0 8px rgba(0,0,0,0.5);
-            transition: transform 0.15s ease, background-color 0.2s ease;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.15);
         }
 
         input[type="range"]:disabled {
@@ -204,9 +199,6 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            background-color: #222222;
-            color: var(--text-primary);
-            border: 1px solid var(--panel-border);
             padding: 12px 16px;
             border-radius: 8px;
             cursor: pointer;
@@ -214,11 +206,7 @@
             font-size: 0.85rem;
             font-weight: 600;
             transition: all 0.2s ease;
-        }
-
-        .btn-action:hover:not(:disabled) {
-            border-color: #444444;
-            background-color: #2a2a2a;
+            text-decoration: none;
         }
 
         .btn-action:disabled {
@@ -238,43 +226,16 @@
             border-color: var(--danger);
         }
 
-        .btn-download {
-            background-color: var(--accent);
-            color: #000000;
+        .btn-whatsapp {
+            background-color: var(--whatsapp-color);
+            color: #ffffff;
             border: none;
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 16px rgba(37, 211, 102, 0.25);
         }
 
-        .btn-download:hover {
-            background-color: #e5e5e5;
-            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.25);
+        .btn-whatsapp:hover {
+            background-color: #20bd5a;
             transform: translateY(-1px);
-        }
-
-        /* Canvas Wrapper & Feedback Floating Elements */
-        .canvas-wrapper {
-            position: relative;
-            width: 100%;
-            background-color: var(--panel-bg);
-            border: 1px solid var(--panel-border);
-            border-radius: 16px;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 520px;
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
-        }
-
-        #webgl-container {
-            width: 100%;
-            height: 100%;
-            min-height: 520px;
-            cursor: grab;
-        }
-
-        #webgl-container.dragging {
-            cursor: grabbing;
         }
 
         .status-loader {
@@ -287,44 +248,53 @@
             padding: 8px 14px;
             border-radius: 20px;
             font-size: 0.75rem;
-            font-weight: 500;
             color: var(--text-primary);
             pointer-events: none;
             transition: opacity 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .instruction-tag {
             position: absolute;
-            bottom: 16px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 16px;
+            left: 16px;
             background: rgba(20, 20, 20, 0.85);
             backdrop-filter: blur(8px);
             border: 1px solid var(--panel-border);
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-muted);
             pointer-events: none;
-            white-space: nowrap;
         }
 
         .divider {
             border: 0;
             height: 1px;
             background: var(--panel-border);
-            margin: 4px 0;
         }
 
+        /* Desktop Adjustments */
         @media (min-width: 860px) {
             .simulator-container { flex-direction: row; }
-            .controls { width: 320px; flex-shrink: 0; }
-            .canvas-wrapper { flex: 1; min-height: 640px; }
-            #webgl-container { min-height: 640px; }
-            .instruction-tag { left: 16px; transform: none; }
+            .controls { width: 320px; flex-shrink: 0; height: fit-content; }
+            .canvas-wrapper { flex: 1; height: 680px; }
+            .floating-upload-btn {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                border-radius: 8px;
+                width: 100%;
+                justify-content: center;
+                background: #1e1e1e;
+                color: var(--text-primary);
+                border: 1px solid var(--panel-border);
+                padding: 12px;
+                box-shadow: none;
+            }
+            .floating-upload-btn:hover {
+                background: #2a2a2a;
+            }
+            .floating-upload-btn svg { fill: var(--text-primary); }
         }
     </style>
     <script type="importmap">
@@ -344,30 +314,24 @@
     </header>
 
     <div class="simulator-container">
+        
+        <!-- Canvas Viewer -->
+        <main class="canvas-wrapper">
+            <div id="statusLoader" class="status-loader">Cargando modelo...</div>
+            <div class="instruction-tag">Arrastra sobre la piel para ubicar | Rota con 2 dedos / mouse</div>
+            <div id="webgl-container"></div>
+
+            <!-- Botón flotante para subir imágen en Mobile / Integrado en Desktop -->
+            <label for="tattooInput" class="floating-upload-btn">
+                <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                <span id="tattooLabel">Subir Tatuaje</span>
+            </label>
+            <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
+        </main>
+
+        <!-- Controles -->
         <aside class="controls">
-            
-            <!-- Carga de Archivos -->
-            <div class="control-section">
-                <span class="section-title">1. Diseño del Tatuaje</span>
-                <label for="tattooInput" class="upload-dropzone">
-                    <svg viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-                    <span id="tattooLabel">Subir Tatuaje</span>
-                    <small>PNG (Fondo Transparente) / JPG</small>
-                </label>
-                <input type="file" id="tattooInput" accept="image/png, image/jpeg, image/webp">
-            </div>
 
-            <div class="control-section">
-                <span class="section-title">2. Modelo 3D (.GLB)</span>
-                <label for="modelInput" class="upload-dropzone" style="padding: 10px;">
-                    <span style="font-size: 0.78rem;">Cargar Modelo Personalizado</span>
-                </label>
-                <input type="file" id="modelInput" accept=".glb, .gltf">
-            </div>
-
-            <hr class="divider">
-
-            <!-- Ajustes de Estampa -->
             <div class="control-section">
                 <div class="section-title">
                     <span>Tamaño / Escala</span>
@@ -388,34 +352,19 @@
                 </div>
             </div>
 
-            <div class="control-section">
-                <div class="section-title">
-                    <span>Opacidad (Tinta)</span>
-                    <span id="valOpacity" class="value-badge">85%</span>
-                </div>
-                <div class="range-slider">
-                    <input type="range" id="opacity" min="0.1" max="1" step="0.05" value="0.85" disabled>
-                </div>
-            </div>
-
             <hr class="divider">
 
-            <!-- Botones de Acción -->
             <button id="btnRemove" class="btn-action btn-danger" disabled>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                 Eliminar Tatuaje
             </button>
-            <button id="btnDownload" class="btn-action btn-download">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                Descargar Captura
+
+            <!-- Botón directo a WhatsApp -->
+            <button id="btnWhatsapp" class="btn-action btn-whatsapp">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                Enviar por WhatsApp
             </button>
         </aside>
-
-        <main class="canvas-wrapper">
-            <div id="statusLoader" class="status-loader">Cargando modelo anatómico...</div>
-            <div id="webgl-container"></div>
-            <div class="instruction-tag">💡 Haz clic y arrastra sobre la piel para mover el tatuaje | Rotar vista con el mouse</div>
-        </main>
     </div>
 
     <script type="module">
@@ -466,30 +415,20 @@
     let lastHitPoint = null;
     let lastHitNormal = null;
 
+    // Opacidad fija al 85%
     const decalParams = { scale: 0.25, rotation: 0, opacity: 0.85 };
 
     const tattooInput = document.getElementById('tattooInput');
-    const modelInput = document.getElementById('modelInput');
     const tattooLabel = document.getElementById('tattooLabel');
     const scaleInput = document.getElementById('scale');
     const rotateInput = document.getElementById('rotate');
-    const opacityInput = document.getElementById('opacity');
     const btnRemove = document.getElementById('btnRemove');
-    const btnDownload = document.getElementById('btnDownload');
+    const btnWhatsapp = document.getElementById('btnWhatsapp');
 
-    // UI Badges
     const valScale = document.getElementById('valScale');
     const valRotate = document.getElementById('valRotate');
-    const valOpacity = document.getElementById('valOpacity');
-
-    const skinMaterial = new THREE.MeshStandardMaterial({
-        color: 0xe0ba9e,
-        roughness: 0.55,
-        metalness: 0.0
-    });
 
     const gltfLoader = new GLTFLoader();
-
     const DEFAULT_MODEL_URL = 'https://cdn.jsdelivr.net/gh/marianocabraltattoo/broderacademy@0b6625f3c005149981e2f7f916e48cf34b8ddb2a/sculpting_a_human_body.glb';
 
     function setupLoadedModel(gltfGroup) {
@@ -529,28 +468,13 @@
 
     gltfLoader.load(
         DEFAULT_MODEL_URL,
-        (gltf) => {
-            setupLoadedModel(gltf.scene);
-        },
+        (gltf) => { setupLoadedModel(gltf.scene); },
         undefined,
         (error) => {
-            console.error("Error al cargar modelo por defecto desde GitHub:", error);
+            console.error("Error al cargar modelo:", error);
             statusLoader.innerText = "Error cargando modelo";
         }
     );
-
-    modelInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        statusLoader.innerText = "Cargando modelo local...";
-        statusLoader.style.opacity = '1';
-
-        const url = URL.createObjectURL(file);
-        gltfLoader.load(url, (gltf) => {
-            setupLoadedModel(gltf.scene);
-        });
-    });
 
     function removeWhiteBackground(img) {
         const canvas = document.createElement('canvas');
@@ -588,7 +512,6 @@
 
                 scaleInput.disabled = false;
                 rotateInput.disabled = false;
-                opacityInput.disabled = false;
                 btnRemove.disabled = false;
                 tattooLabel.innerText = "Cambiar Tatuaje";
 
@@ -728,7 +651,6 @@
     container.addEventListener('pointerup', stopDragging);
     container.addEventListener('pointerleave', stopDragging);
 
-    // Eventos Sliders con Feedback UI
     scaleInput.addEventListener('input', (e) => {
         decalParams.scale = parseFloat(e.target.value);
         valScale.innerText = `${Math.round(decalParams.scale * 100)}%`;
@@ -739,12 +661,6 @@
         decalParams.rotation = parseInt(e.target.value);
         valRotate.innerText = `${decalParams.rotation}°`;
         applyTattoo();
-    });
-
-    opacityInput.addEventListener('input', (e) => {
-        decalParams.opacity = parseFloat(e.target.value);
-        valOpacity.innerText = `${Math.round(decalParams.opacity * 100)}%`;
-        if (decalMesh) decalMesh.material.opacity = decalParams.opacity;
     });
 
     btnRemove.addEventListener('click', () => {
@@ -758,21 +674,28 @@
         tattooTexture = null;
         scaleInput.disabled = true;
         rotateInput.disabled = true;
-        opacityInput.disabled = true;
         btnRemove.disabled = true;
         tattooLabel.innerText = "Subir Tatuaje";
     });
 
-    btnDownload.addEventListener('click', () => {
+    // Acción WhatsApp + Captura de respaldo
+    btnWhatsapp.addEventListener('click', () => {
         renderer.render(scene, camera);
         const imageURI = renderer.domElement.toDataURL('image/png');
 
+        // Descarga automática de la referencia
         const link = document.createElement('a');
         link.download = 'simulacion-tatuaje-3d.png';
         link.href = imageURI;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+
+        // Enlace WhatsApp
+        const message = encodeURIComponent("Este es el diseño de referencia, con su medida y ubicacion precisa");
+        const waUrl = `https://wa.me/message/MA2C4XCVWNKTM1?text=${message}`;
+        
+        window.open(waUrl, '_blank');
     });
 
     window.addEventListener('resize', () => {
