@@ -842,125 +842,48 @@
        GESTOR TÁCTIL AVANZADO: ZOOM DIRIGIDO & PAN DE 2 DEDOS
     ----------------------------------------------------------- */
     let initialPinchDistance = null;
-    let initialMidPoint = { x: 0, y: 0 };
+    let initialCameraFov = camera.fov;
+    let lastPanTouch = null;
 
-    function getTouchesInfo(touches) {
-        const rect = container.getBoundingClientRect();
-        const t1 = touches[0];
-        const t2 = touches[1];
-
-        const dx = t1.clientX - t2.clientX;
-        const dy = t1.clientY - t2.clientY;
-        const dist = Math.hypot(dx, dy);
-
-        const midX = (t1.clientX + t2.clientX) / 2;
-        const midY = (t1.clientY + t2.clientY) / 2;
-
-        const normX = ((midX - rect.left) / container.clientWidth) * 2 - 1;
-        const normY = -((midY - rect.top) / container.clientHeight) * 2 + 1;
-
-        return { dist, midX, midY, normX, normY };
+    function getTouchesDistance(touches) {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.hypot(dx, dy);
     }
 
-    container.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 2) {
-            isDraggingTattoo = false;
-            container.classList.remove('dragging');
+    function getTouchesCenter(touches) {
+        return {
+            x: (touches[0].clientX + touches[1].clientX) / 2,
+            y: (touches[0].clientY + touches[1].clientY) / 2
+        };
+    }
 
-            const info = getTouchesInfo(e.touches);
-            initialPinchDistance = info.dist;
-            initialMidPoint = { x: info.midX, y: info.midY };
-
-            raycaster.setFromCamera(new THREE.Vector2(info.normX, info.normY), camera);
-            const targetObj = customModelGroup || humanMesh;
-            const intersects = raycaster.intersectObject(targetObj, true);
-
-            if (intersects.length > 0) {
-                controls.target.lerp(intersects[0].point, 0.6);
-            }
-        }
-    }, { passive: false });
-
-    container.addEventListener('touchmove', (e) => {
-        if (e.touches.length === 2 && initialPinchDistance) {
-            e.preventDefault();
-            const info = getTouchesInfo(e.touches);
-
-            // 1. ZOOM DIRIGIDO
-            const scaleFactor = initialPinchDistance / info.dist;
-            const distToTarget = camera.position.distanceTo(controls.target);
-            const newDist = distToTarget * scaleFactor;
-
-            if (newDist >= 0.5 && newDist <= 6.0) {
-                const dir = camera.position.clone().sub(controls.target).normalize();
-                camera.position.copy(controls.target).add(dir.multiplyScalar(newDist));
-            }
-
-            // 2. PAN / DESPLAZAMIENTO
-            const deltaX = info.midX - initialMidPoint.x;
-            const deltaY = info.midY - initialMidPoint.y;
-
-            if (Math.hypot(deltaX, deltaY) > 2) {
-                const panSpeed = 0.002 * (distToTarget / 3.0);
-                const vRight = new THREE.Vector3(1, 0, 0).applyQuaternion(camera.quaternion);
-                const vUp = new THREE.Vector3(0, 1, 0).applyQuaternion(camera.quaternion);
-
-                const panVector = vRight.multiplyScalar(-deltaX * panSpeed).add(vUp.multiplyScalar(deltaY * panSpeed));
-                camera.position.add(panVector);
-                controls.target.add(panVector);
-            }
-
-            initialPinchDistance = info.dist;
-            initialMidPoint = { x: info.midX, y: info.midY };
-        }
-    }, { passive: false });
-
-    container.addEventListener('touchend', (e) => {
-        if (e.touches.length < 2) {
-            initialPinchDistance = null;
-        }
-    });
-
+    // Interacción con Ratón / Tap de 1 Dedo para arrastrar tatuaje
     container.addEventListener('pointerdown', (e) => {
-        if (e.target.closest('.viewport-orbit-controller') || e.target.closest('.floating-upload-btn')) {
-            return;
-        }
-
-        if (e.pointerType === 'touch' && e.isPrimary === false) return;
-        
+        if (e.pointerType === 'touch' && !e.isPrimary) return; // Evitar disparar con múltiples dedos
         updateMouseCoords(e);
-        const hit = checkMeshIntersect();
-
-        if (hit) {
+        const intersect = checkMeshIntersect();
+        if (intersect && tattooTexture) {
             isDraggingTattoo = true;
             container.classList.add('dragging');
-
-            lastHitPoint = hit.point.clone();
-            lastHitNormal = hit.face.normal.clone();
-            lastHitNormal.transformDirection(hit.object.matrixWorld).normalize();
-            humanMesh = hit.object;
-
-            if (tattooTexture) {
-                applyTattoo();
-            }
+            lastHitPoint = intersect.point.clone();
+            lastHitNormal = intersect.face.normal.clone();
+            lastHitNormal.transformDirection(intersect.object.matrixWorld).normalize();
+            humanMesh = intersect.object;
+            applyTattoo();
         }
     });
 
-    container.addEventListener('pointermove', (e) => {
+    window.addEventListener('pointermove', (e) => {
         if (!isDraggingTattoo) return;
-
         updateMouseCoords(e);
-        const hit = checkMeshIntersect();
-
-        if (hit) {
-            lastHitPoint = hit.point.clone();
-            lastHitNormal = hit.face.normal.clone();
-            lastHitNormal.transformDirection(hit.object.matrixWorld).normalize();
-            humanMesh = hit.object;
-
-            if (tattooTexture) {
-                applyTattoo();
-            }
+        const intersect = checkMeshIntersect();
+        if (intersect) {
+            lastHitPoint = intersect.point.clone();
+            lastHitNormal = intersect.face.normal.clone();
+            lastHitNormal.transformDirection(intersect.object.matrixWorld).normalize();
+            humanMesh = intersect.object;
+            applyTattoo();
         }
     });
 
@@ -969,6 +892,70 @@
         container.classList.remove('dragging');
     });
 
+    // Gestos Multitáctiles (Zoom & Pan de 2 Dedos)
+    container.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+            isDraggingTattoo = false; // Cancelar arrastre de tatuaje si detecta 2 dedos
+            container.classList.remove('dragging');
+
+            initialPinchDistance = getTouchesDistance(e.touches);
+            initialCameraFov = camera.fov;
+            lastPanTouch = getTouchesCenter(e.touches);
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+
+            // 1. Zoom (Pinch)
+            const currentDistance = getTouchesDistance(e.touches);
+            if (initialPinchDistance && currentDistance > 0) {
+                const factor = initialPinchDistance / currentDistance;
+                let newFov = initialCameraFov * factor;
+                camera.fov = THREE.MathUtils.clamp(newFov, 15, 75);
+                camera.updateProjectionMatrix();
+            }
+
+            // 2. Pan (Mover Cámara)
+            const currentCenter = getTouchesCenter(e.touches);
+            if (lastPanTouch) {
+                const deltaX = (currentCenter.x - lastPanTouch.x) * 0.003;
+                const deltaY = (currentCenter.y - lastPanTouch.y) * 0.003;
+
+                // Desplazar posición de cámara y target en el plano local
+                const sideVector = new THREE.Vector3();
+                const upVector = new THREE.Vector3();
+
+                camera.getWorldDirection(sideVector);
+                sideVector.cross(camera.up).normalize();
+                upVector.copy(camera.up).normalize();
+
+                const panOffset = sideVector.multiplyScalar(-deltaX).add(upVector.multiplyScalar(deltaY));
+                
+                camera.position.add(panOffset);
+                controls.target.add(panOffset);
+                lastPanTouch = currentCenter;
+            }
+        }
+    }, { passive: false });
+
+    container.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) {
+            initialPinchDistance = null;
+            lastPanTouch = null;
+        }
+    });
+
+    // Zoom con Rueda del Ratón (Desktop)
+    container.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        let newFov = camera.fov + e.deltaY * 0.05;
+        camera.fov = THREE.MathUtils.clamp(newFov, 15, 75);
+        camera.updateProjectionMatrix();
+    }, { passive: false });
+
+    // Controles Sliders
     scaleInput.addEventListener('input', (e) => {
         decalParams.scale = parseFloat(e.target.value);
         valScale.innerText = `${Math.round((decalParams.scale / 0.8) * 100)}%`;
@@ -981,33 +968,39 @@
         applyTattoo();
     });
 
+    // Reiniciar Cámara
     btnResetCam.addEventListener('click', () => {
         camera.position.copy(initialCamPos);
+        camera.fov = 45;
+        camera.updateProjectionMatrix();
         controls.target.copy(initialTarget);
         controls.update();
     });
 
+    // Descargar Imagen
     btnDownload.addEventListener('click', () => {
         renderer.render(scene, camera);
         const dataURL = renderer.domElement.toDataURL('image/png');
         const link = document.createElement('a');
-        link.download = 'simulacion-tatuaje-broder.png';
+        link.download = 'simulacion-tatuaje-broder-academy.png';
         link.href = dataURL;
         link.click();
     });
 
+    // Resizing Adaptativo
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+
+    // Bucle de Animación
     function animate() {
         requestAnimationFrame(animate);
         controls.update();
         renderer.render(scene, camera);
     }
     animate();
-
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    });
     </script>
 </body>
 </html>
