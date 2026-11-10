@@ -262,23 +262,35 @@
         BroderAcademy &copy; 2026 Buenos Aires, Argentina
     </footer>
 
-    <script>
-        // Fecha límite REAL del 50% OFF (hora Argentina). Editá solo esta línea para cambiarla.
-        const OFFER_DEADLINE = new Date('2026-11-15T23:59:59-03:00');
-        const cd = document.getElementById('countdown');
-        function tick() {
-            const ms = OFFER_DEADLINE - new Date();
-            if (ms <= 0) { cd.textContent = 'Última oportunidad'; return; }
-            const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5), m = Math.floor(ms % 36e5 / 6e4), s = Math.floor(ms % 6e4 / 1e3);
-            const p = n => String(n).padStart(2, '0');
-            cd.textContent = (d > 0 ? d + 'd ' : '') + p(h) + ':' + p(m) + ':' + p(s);
-        }
-        tick(); setInterval(tick, 1000);
+        <script>
+        // Fecha límite REAL del 50% OFF (hora Argentina). Editá solo esta línea para
+        // cambiar cuándo termina la oferta. Formato: AAAA-MM-DDTHH:MM:SS-03:00
+        const OFFER_DEADLINE = new Date('2026-11-15T23:59:59-03:00').getTime();
 
-        // Pixel de Meta: evento Lead al tocar un botón de inscripción
-        document.querySelectorAll('a.wa').forEach(a => a.addEventListener('click', () => {
-            if (window.fbq) fbq('track', 'Lead');
-        }));
+        const countdownEl = document.getElementById('countdown');
+
+        function pad(n) { return String(n).padStart(2, '0'); }
+
+        function updateCountdown() {
+            const diff = OFFER_DEADLINE - Date.now();
+
+            if (diff <= 0) {
+                countdownEl.textContent = 'Oferta finalizada';
+                clearInterval(timer);
+                return;
+            }
+
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            countdownEl.textContent = `${d}d ${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+        }
+
+        updateCountdown();
+        const timer = setInterval(updateCountdown, 1000);
     </script>
 </body>
 </html>
+
